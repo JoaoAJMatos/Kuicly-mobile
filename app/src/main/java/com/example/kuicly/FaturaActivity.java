@@ -1,14 +1,14 @@
 package com.example.kuicly;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-public class RegistoActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class FaturaActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registo);
+        setContentView(R.layout.activity_fatura);
     }
 }

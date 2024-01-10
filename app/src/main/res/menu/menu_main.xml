@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior ="single"> <!-- Garante que só pode ser clicado uma vez de cada vez-->
+        <item
+            android:title="@string/txt_menu_estatico"
+            android:icon="@drawable/ic_menu_estatico"
+            android:id="@+id/navEstatico" />
+
+    </group>
+
+    <item android:title="@string/txt_comunicar">
+        <menu>
+            <item android:id="@+id/navEmail"
+                android:icon="@drawable/ic_menu_email"
+                android:title="@string/txt_menu_email">
+            </item>
+
+        </menu>
+    </item>
+</menu>
