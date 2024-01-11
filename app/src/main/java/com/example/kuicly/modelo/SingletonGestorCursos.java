@@ -1,6 +1,7 @@
 package com.example.kuicly.modelo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -12,10 +13,15 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.listners.CursosListener;
+import com.example.kuicly.listners.LicaoListener;
+import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
 import com.example.kuicly.utils.CursoJsonParser;
+import com.example.kuicly.utils.LicaoJsonParser;
+import com.example.kuicly.utils.LoginJsonParser;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,19 +30,27 @@ import java.util.Map;
 public class SingletonGestorCursos {
 
     private ArrayList<Curso> cursos;
+    private ArrayList<Licao> licoes;
     private static SingletonGestorCursos instance = null;
 
-    private CursoBDHelper yii2kuicly= null;
+    private CursoBDHelper CursoBD= null;
 
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPICursos = "http://127.0.0.1/kuicly/backend/web/api/courses";
-    private static final String mUrlAPILogin = "http://127.0.0.1/kuicly/backend/web/api/auth/login";
+    private static final String mUrlAPICursos = "http://10.0.2.2/kuicly/backend/web/api/courses/courses?token=s1kQ81Cn7fcVkeEibwMI0fbB4m7g-9-P";
+    private static final String mUrlAPILogin = "http://10.0.2.2/kuicly/backend/web/api/logins/login";
 
-    private static final String TOKEN="AMSI-TOKEN";
+    private static final String mUrlAPILicoes ="http://10.0.2.2/kuicly/backend/web/api/lessons/lessonsbycourse/61?token=s1kQ81Cn7fcVkeEibwMI0fbB4m7g-9-P";
 
+    private static final String TOKEN="s1kQ81Cn7fcVkeEibwMI0fbB4m7g-9-P";
+
+    private String login;
     private CursosListener cursosListner;
     private CursoListener cursoListner;
     private LoginListener loginListener;
+
+    private LicaoListener licaoListner;
+
+    private LicoesListener licoesListner;
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
         if(instance == null) {
@@ -49,7 +63,7 @@ public class SingletonGestorCursos {
     private SingletonGestorCursos(Context context){
 
         cursos = new ArrayList<>();
-        yii2kuicly = new CursoBDHelper(context);
+        CursoBD = new CursoBDHelper(context);
     }
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
@@ -58,12 +72,20 @@ public class SingletonGestorCursos {
         this.cursosListner = cursosListner;
     }
 
-    public void setLivroListner(CursoListener cursoListner) {
+    public void setCursoListner(CursoListener cursoListner) {
         this.cursoListner = cursoListner;
     }
     public ArrayList<Curso> getCursosBD(){
-        cursos = yii2kuicly.getAllCursosBD();
+        cursos = CursoBD.getAllCursosBD();
         return new ArrayList<>(cursos);
+    }
+
+    public void setLicaoListner(LicaoListener licaoListner) {
+        this.licaoListner = licaoListner;
+    }
+
+    public void setLicoesListner(LicoesListener licoesListner) {
+        this.licoesListner = licoesListner;
     }
 
     /*public void adicionarALLCursosBD(ArrayList<Curso> cursos){
@@ -91,6 +113,15 @@ public class SingletonGestorCursos {
         for(Curso curso: cursos){
             if(curso.getId() == id){
                 return curso;
+            }
+        }
+        return null;
+    }
+
+    public Licao getLicao(int id){
+        for(Licao licao: licoes){
+            if(licao.getId() == id){
+                return licao;
             }
         }
         return null;
@@ -139,10 +170,10 @@ public class SingletonGestorCursos {
     public void getAllCursosAPI(final Context context){
         if(!CursoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-            cursos=getCursosBD();
+          /*  cursos=getCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
-            }
+            }*/
         }else{
             JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos,null, new Response.Listener<JSONArray>() {
                 @Override
@@ -227,24 +258,37 @@ public class SingletonGestorCursos {
     //end region
 
     public void loginAPI(final String username, final String password, final Context context) {
-        if (!CursoJsonParser.isConnectionInternet(context))
+        if (!LoginJsonParser.isConnectionInternet(context))
             Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
         else {
-            StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin,
-                    new Response.Listener<String>() {
+            StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            String token = CursoJsonParser.parserJsonLogin(response);
+                            try{
+                                JSONObject loginJSON = new JSONObject(response);
+                                String token = loginJSON.getString("token");
 
-                            if (loginListener != null) {
-                                loginListener.onUpdateLogin(token);
+                                login = LoginJsonParser.parserJsonLogin(response);
+
+                                SharedPreferences sharedToken = context.getSharedPreferences("DADOS", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedToken.edit();
+                                editor.putString("token", token);
+                                editor.apply();
+
+                                if (loginListener != null) {
+                                    loginListener.onUpdateLogin(login);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(context, "loginAPI erro", Toast.LENGTH_SHORT).show();
                             }
+
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            Toast.makeText(context, "loginAPI erro response", Toast.LENGTH_SHORT).show();
                         }
                     }) {
                 @Override
@@ -258,5 +302,35 @@ public class SingletonGestorCursos {
             volleyQueue.add(request); // Adicione a requisição à fila do Volley para ser executada
         }
     }
+    public void getAllLicoesAPI(final Context context){
+        if(!LicaoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+          /*  cursos=getCursosBD();
+            if(cursosListner != null){
+                cursosListner.onRefreshListaCursos(cursos);
+            }*/
+        }else{
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPILicoes,null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                    licoes= LicaoJsonParser.parserJsonLicoes(response);
+                    //adicionarALLCursosBD(cursos);
+
+                    if(licoesListner != null){
+                        licoesListner.onRefreshListaLicoes(licoes);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
 
 }

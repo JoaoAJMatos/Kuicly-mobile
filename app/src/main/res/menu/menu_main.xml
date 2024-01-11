@@ -5,17 +5,17 @@
 
     <group android:checkableBehavior ="single"> <!-- Garante que só pode ser clicado uma vez de cada vez-->
         <item
-            android:title="@string/txt_menu_estatico"
+            android:title="@string/txt_menu_curso"
             android:icon="@drawable/ic_menu_estatico"
-            android:id="@+id/navEstatico" />
+            android:id="@+id/navCurso" />
 
     </group>
 
     <item android:title="@string/txt_comunicar">
         <menu>
-            <item android:id="@+id/navEmail"
+            <item android:id="@+id/navLogout"
                 android:icon="@drawable/ic_menu_email"
-                android:title="@string/txt_menu_email">
+                android:title="@string/txt_menu_logout">
             </item>
 
         </menu>

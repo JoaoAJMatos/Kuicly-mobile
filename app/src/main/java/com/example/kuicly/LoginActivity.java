@@ -1,8 +1,8 @@
 package com.example.kuicly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener{
         //inicializar
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
-        SingletonGestorCursos.getInstance(getApplicationContext()).setLoginListener(this);
+
     }
 
     public void onClickLogin(View view) {
@@ -49,13 +49,11 @@ public class LoginActivity extends AppCompatActivity implements LoginListener{
         intent.putExtra("NOME","diana");
         startActivity(intent);
         finish();*/
-        SingletonGestorCursos.getInstance(this).loginAPI(user, pass,getApplicationContext());
-    }
 
-    private boolean isEmailValido(String email){
-        if(email == null)
-            return false;
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        SingletonGestorCursos singletonGestorCursos = SingletonGestorCursos.getInstance(this);
+        singletonGestorCursos.setLoginListener(this);
+
+        singletonGestorCursos.loginAPI(user, pass, getApplicationContext());
     }
 
     private boolean isUsernameValido(String username) {
@@ -76,8 +74,12 @@ public class LoginActivity extends AppCompatActivity implements LoginListener{
     public void onUpdateLogin(String token) {
         if(token != null) {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(TOKEN, token);
             intent.putExtra(USER, etUsername.getText().toString());
+
+            SharedPreferences sharedToken  = getSharedPreferences("DADOS", MODE_PRIVATE);
+            SharedPreferences.Editor editor  = sharedToken.edit();
+            editor.putString("username", etUsername.getText().toString());
+            editor.apply();
             startActivity(intent);
             finish();
         }

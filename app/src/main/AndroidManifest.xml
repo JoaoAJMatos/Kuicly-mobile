@@ -20,6 +20,9 @@
             android:name=".FaturaActivity"
             android:exported="false" />
         <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetalhesCursoActivity"
             android:exported="false" />
         <activity
@@ -27,9 +30,6 @@
             android:exported="false" />
         <activity
             android:name=".LessonActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CursoActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

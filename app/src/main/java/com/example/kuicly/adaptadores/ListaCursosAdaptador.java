@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.kuicly.R;
 import com.example.kuicly.modelo.Curso;
 
@@ -71,17 +73,18 @@ public class ListaCursosAdaptador extends BaseAdapter {
             imgCapa = view.findViewById(R.id.imgCapa);
         }
 
+        //invoca 1 vez por cada linha da lista
         public void update(Curso curso){
             tvTile.setText(curso.getTitle());
             tvDescription.setText(curso.getDescription());
             tvPrice.setText(curso.getPrice()+"");
-            tvSkill_level.setText(curso.getSkill_level());
-            //imgCapa.setImageResource(livro.getCapa());
-           /* Glide.with(context)
+            tvSkill_level.setText(curso.getSkill_level()+"");
+            //imgCapa.setImageResource(curso.getCapa());
+            Glide.with(context)
                     .load(curso.getCapa())
                     .placeholder(R.drawable.logoipl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgCapa);*/
+                    .into(imgCapa);
         }
     }
 }

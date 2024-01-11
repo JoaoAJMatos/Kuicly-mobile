@@ -1,6 +1,7 @@
 package com.example.kuicly;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -8,16 +9,21 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.modelo.Curso;
+import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener {
 
     public static final String ID_CURSO = "id";
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
-    private TextView etTitulo, etAutor, etSerie, etAno;
+    private TextView etTitulo, etDescricao, etSerie, etAno;
     private FloatingActionButton fabGuardar;
     private ImageView imgCapa;
     public static final String DEFAULT_IMG =
@@ -25,34 +31,32 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
 
     private Curso curso;
 
-   /* @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_curso);
 
         etTitulo = findViewById(R.id.etTitulo);
-        etSerie = findViewById(R.id.etSerie);
-        etAutor = findViewById(R.id.etAutor);
-        etAno = findViewById(R.id.etAno);
+        etDescricao = findViewById(R.id.etDescricao);
         imgCapa = findViewById(R.id.imgCapa);
         fabGuardar = findViewById(R.id.fabGuardar);
 
-        SingletonGestorLivros.getInstance(getApplicationContext()).setLivroListner(this);
+        SingletonGestorCursos.getInstance(getApplicationContext()).setCursoListner(this);
 
-        int id = getIntent().getIntExtra(ID_LIVRO,0);
+        int id = getIntent().getIntExtra(ID_CURSO,0);
         if (id > 0) {
-            livro = SingletonGestorLivros.getInstance(getApplicationContext()).getlivro(id);//erro getlivrosbd nao faço ideia como é
-            if (livro != null) {
-                carregarInfoLivro();
-                fabGuardar.setImageResource(R.drawable.ic_action_guardar);
+            curso = SingletonGestorCursos.getInstance(getApplicationContext()).getCurso(id);//erro getlivrosbd nao faço ideia como é
+            if (curso != null) {
+                carregarInfoCurso();
+                //fabGuardar.setImageResource(R.drawable.ic_action_guardar);
             }else {
                 finish();
             }
         }else {
             setTitle("Adicionar Livro");
-            fabGuardar.setImageResource(R.drawable.ic_action_adicionar);
+            //fabGuardar.setImageResource(R.drawable.ic_action_adicionar);
         }
-        fabGuardar.setOnClickListener(new View.OnClickListener() {
+        /*fabGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (livro != null) {
@@ -75,21 +79,25 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
 
             }
 
-        });
-    }*/
+        });*/
+
+
+        Fragment fragment = new ListaLicoesFragment();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
+    }
 
 
 
     private boolean isLivroValido() {
         String titulo = etTitulo.getText().toString();
-        String serie = etSerie.getText().toString();
-        String autor = etAutor.getText().toString();
-        String ano = etAno.getText().toString();
+        String descricao = etDescricao.getText().toString();
+
         if(titulo.length() < MIN_CHAR){
             etTitulo.setError("Titulo tem de ter pelo menos "+MIN_CHAR+" caracteres");
             return false;
         }
-        if(serie.length() < MIN_CHAR){
+       /* if(serie.length() < MIN_CHAR){
             etSerie.setError("Serie tem de ter pelo menos "+MIN_CHAR+" caracteres");
             return false;
         }
@@ -100,21 +108,21 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         if(ano.length() != MIN_NUM){
             etAno.setError("Ano tem de ter pelo menos "+MIN_NUM+" caracteres");
             return false;
-        }
+        }*/
         return true;
     }
 
     private void carregarInfoCurso() {
         setTitle("Detalhes:"+curso.getTitle());
-        etTitulo.setText(curso.getDescription());
-        etSerie.setText(curso.getSkill_level());
-        etAutor.setText(curso.getPrice() + "");
+        etTitulo.setText(curso.getTitle());
+        etDescricao.setText(curso.getDescription());
+        //etAutor.setText(curso.getPrice() + "");
         //imgCapa.setImageResource(livro.getCapa());
-        /*Glide.with(getApplicationContext())
+        Glide.with(getApplicationContext())
                 .load(curso.getCapa())
                 .placeholder(R.drawable.logoipl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imgCapa);*/
+                .into(imgCapa);
 
     }
 

@@ -53,10 +53,14 @@
                 android:textSize="20sp"
                 android:text="Aulas" />
 
-            <ListView
-                android:id="@+id/listViewLessons"
+
+            <FrameLayout
+                android:id="@+id/contentFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+
+
             <Button
                 android:id="@+id/btnAddCarrinho"
                 android:layout_width="wrap_content"

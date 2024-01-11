@@ -17,7 +17,7 @@ public class CursoBDHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
 
-    private static final String ID = "id",DESCRIPTION = "description",  TITLE = "title", PRICE = "price", SKILL_LEVEL = "skill_level";
+    private static final String ID = "id",DESCRIPTION = "description",  TITLE = "title", PRICE = "price", SKILL_LEVEL = "skill_level", CAPA = "file";
 
     public CursoBDHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -30,11 +30,11 @@ public class CursoBDHelper extends SQLiteOpenHelper {
     public ArrayList<Curso> getAllCursosBD(){
         ArrayList<Curso> cursos = new ArrayList<>();
 
-        Cursor cursor = db.query(TABLE_NAME, new String[]{ID, DESCRIPTION, TITLE,PRICE,SKILL_LEVEL}, null, null,
+        Cursor cursor = db.query(TABLE_NAME, new String[]{ID, DESCRIPTION, TITLE,PRICE,SKILL_LEVEL,CAPA}, null, null,
                 null, null, null);
         if(cursor.moveToFirst()){
             do{
-                Curso auxCurso = new Curso(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getFloat(3),cursor.getInt(4));
+                Curso auxCurso = new Curso(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getFloat(3),cursor.getInt(4),cursor.getString(5));
                 cursos.add(auxCurso);
             }while(cursor.moveToNext());
             cursor.close();
@@ -49,7 +49,9 @@ public class CursoBDHelper extends SQLiteOpenHelper {
                 DESCRIPTION + " TEXT NOT NULL, " +
                 TITLE + " TEXT NOT NULL, " +
                 PRICE + " FLOAT NOT NULL, " +
-                SKILL_LEVEL + " INTEGER NOT NULL);";
+                SKILL_LEVEL + " INTEGER NOT NULL," +
+                CAPA + " TEXT NOT NULL" +
+                ");";
         db.execSQL(sqlTableCursos);
     }
 

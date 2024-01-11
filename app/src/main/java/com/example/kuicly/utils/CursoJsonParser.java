@@ -24,7 +24,8 @@ public class CursoJsonParser {
                 String title = cursoJSON.getString("title");
                 float price = cursoJSON.getInt("price");
                 int skill_level = cursoJSON.getInt("skill_level");
-                Curso curso = new Curso(id, description, title, price, skill_level);
+                String capa = cursoJSON.getString("file_id");
+                Curso curso = new Curso(id, description, title, price, skill_level,capa);
                 cursos.add(curso);
             }
         } catch (JSONException e) {
@@ -42,23 +43,14 @@ public class CursoJsonParser {
             String title = cursoJSON.getString("title");
             float price = cursoJSON.getInt("price");
             int skill_level = cursoJSON.getInt("skill_level");
-            curso = new Curso(id, description, title, price, skill_level);
+            String capa = cursoJSON.getString("file_id");
+            curso = new Curso(id, description, title, price, skill_level,capa);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         return curso;
     }
 
-    public static String parserJsonLogin(String response) {
-        String token = null;
-        try {
-            JSONObject loginJSON = new JSONObject(response);
-            token = loginJSON.getString("token");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        return token;
-    }
 
     public static boolean isConnectionInternet(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

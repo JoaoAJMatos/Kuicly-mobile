@@ -18,27 +18,25 @@
             android:orientation="vertical">
 
             <VideoView
-                android:id="@+id/videoLesson"
+                android:id="@+id/videoLicao"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/etTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:text="Título da Lesson" />
 
-                android:ems="10"
-                android:hint="Titulo"
-                android:inputType="text" />
 
-            <EditText
-                android:id="@+id/etDescricao"
+            <TextView
+                android:id="@+id/etContexto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:ems="10"
-                android:hint="Descricao"
-                android:inputType="text" />
+                android:textSize="16sp"
+                android:text="Descrição da Lesson" />
 
             <View
                 android:id="@+id/view2"

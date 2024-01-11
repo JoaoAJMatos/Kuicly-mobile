@@ -4,57 +4,53 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.kuicly.adaptadores.ListaCursosAdaptador;
-import com.example.kuicly.listners.CursosListener;
-import com.example.kuicly.modelo.Curso;
+import com.example.kuicly.adaptadores.ListaLicoesAdaptador;
+import com.example.kuicly.listners.LicoesListener;
+import com.example.kuicly.modelo.Licao;
 import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class ListaCursosFragment extends Fragment implements CursosListener {
 
-    private ListView lvCursos; //objeto gráfico
-    private ArrayList<Curso> cursos; //modelo, lista de livros
+public class ListaLicoesFragment extends Fragment implements LicoesListener {
+
+    private ListView lvLicoes; //objeto gráfico
+    private ArrayList<Licao> licoes; //modelo, lista de livros
 
     private FloatingActionButton fabLista;
-    private SearchView searchView;
-
-    public ListaCursosFragment() {
+    //private SearchView searchView;
+    public ListaLicoesFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_lista_cursos , container , false);
+        View view = inflater.inflate(R.layout.fragment_lista_licoes , container , false);
         setHasOptionsMenu(true);
 
-        lvCursos = view.findViewById(R.id.lvCursos);
-        SingletonGestorCursos.getInstance(getContext()).setCursosListner(this);
-        SingletonGestorCursos.getInstance(getContext()).getAllCursosAPI(getContext());
+        lvLicoes = view.findViewById(R.id.lvLicoes);
+        SingletonGestorCursos.getInstance(getContext()).setLicoesListner(this);
+        SingletonGestorCursos.getInstance(getContext()).getAllLicoesAPI(getContext());
 
         //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
         //click num item da lista
-        lvCursos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvLicoes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
-                intent.putExtra(DetalhesCursoActivity.ID_CURSO,(int) id);
+                Intent intent = new Intent(getContext() , LessonActivity.class);
+                intent.putExtra(LessonActivity.ID_LICAO,(int) id);
                 //startActivity(intent);
                 startActivityForResult(intent , MainActivity.EDIT);
 
@@ -65,7 +61,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
         fabLista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
+                Intent intent = new Intent(getContext() , LessonActivity.class);
                 //startActivity(intent);
                 startActivityForResult(intent , MainActivity.ADD);
             }
@@ -98,7 +94,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_pesquisa , menu);
         MenuItem itemPesquisa = menu.findItem(R.id.itemPesquisa);
@@ -112,22 +108,22 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
             //quando o utilizador escreve
             @Override
             public boolean onQueryTextChange(String newText) {
-                ArrayList<Curso> tempListaCursos = new ArrayList<>();
+                ArrayList<Curso> tempListaLicoes = new ArrayList<>();
                 for(Curso l:SingletonGestorCursos.getInstance(getContext()).getCursosBD()){
                     if(l.getTitle().toLowerCase().contains(newText.toLowerCase()))
-                        tempListaCursos.add(l);
+                        tempListaLicoes.add(l);
                 }
-                lvCursos.setAdapter(new ListaCursosAdaptador(getContext() , tempListaCursos));
+                lvLicoes.setAdapter(new ListaCursosAdaptador(getContext() , tempListaLicoes));
                 return true;
             }
         });
         super.onCreateOptionsMenu(menu , inflater);
-    }
+    }*/
 
     @Override
-    public void onRefreshListaCursos(ArrayList<Curso> listaCursos) {
-        if(listaCursos!=null){
-            lvCursos.setAdapter(new ListaCursosAdaptador(getContext(),listaCursos));
+    public void onRefreshListaLicoes(ArrayList<Licao> listaLicoes) {
+        if(listaLicoes!=null){
+            lvLicoes.setAdapter(new ListaLicoesAdaptador(getContext(),listaLicoes));
         }
     }
 }
