@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //fragment = new EstaticoFragment();
             fragment = new ListaCursosFragment();
             setTitle(item.getTitle());
+        }else if(item.getItemId()==R.id.navCarrinho) {
+            fragment = new ListaCarrinhoItensFragment();
+            setTitle(item.getTitle());
         }
         else if(item.getItemId()== R.id.navLogout) {
             SharedPreferences sharedPreferencesEmailUser = getSharedPreferences("DADOS", Context.MODE_PRIVATE);

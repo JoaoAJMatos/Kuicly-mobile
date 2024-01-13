@@ -57,15 +57,6 @@ public class ListaLicoesFragment extends Fragment implements LicoesListener {
             }
         });
         //click no floating btn
-        fabLista = view.findViewById(R.id.fabLista);
-        fabLista.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext() , LessonActivity.class);
-                //startActivity(intent);
-                startActivityForResult(intent , MainActivity.ADD);
-            }
-        });
 
         return view;
     }

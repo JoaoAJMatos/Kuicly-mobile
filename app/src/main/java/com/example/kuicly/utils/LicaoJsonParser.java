@@ -21,7 +21,8 @@ public class LicaoJsonParser {
                 int id = licaoJSON.getInt("id");
                 String title = licaoJSON.getString("title");
                 String context = licaoJSON.getString("context");
-                Licao licao = new Licao(id,title,context,"");
+                String video = licaoJSON.getString("file_id");
+                Licao licao = new Licao(id,title,context,video);
                 licoes.add(licao);
             }
         } catch (JSONException e) {

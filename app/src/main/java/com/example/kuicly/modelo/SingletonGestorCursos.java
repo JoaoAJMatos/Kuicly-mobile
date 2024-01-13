@@ -11,11 +11,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.kuicly.CarrinhoActivity;
+import com.example.kuicly.listners.CarrinhoItensListener;
+import com.example.kuicly.listners.CarrinhoListener;
 import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.listners.CursosListener;
 import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
+import com.example.kuicly.utils.CarrinhoItensJsonParser;
 import com.example.kuicly.utils.CursoJsonParser;
 import com.example.kuicly.utils.LicaoJsonParser;
 import com.example.kuicly.utils.LoginJsonParser;
@@ -31,17 +35,24 @@ public class SingletonGestorCursos {
 
     private ArrayList<Curso> cursos;
     private ArrayList<Licao> licoes;
+    private ArrayList<Carrinho> carrinhos;
+
+    private ArrayList<CarrinhoItens> carrinhoItens;
+
+
     private static SingletonGestorCursos instance = null;
 
     private CursoBDHelper CursoBD= null;
 
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPICursos = "http://10.0.2.2/kuicly/backend/web/api/courses/courses?token=s1kQ81Cn7fcVkeEibwMI0fbB4m7g-9-P";
+    private static final String mUrlAPICursos = "http://10.0.2.2/kuicly/backend/web/api/courses/courses";
     private static final String mUrlAPILogin = "http://10.0.2.2/kuicly/backend/web/api/logins/login";
 
-    private static final String mUrlAPILicoes ="http://10.0.2.2/kuicly/backend/web/api/lessons/lessonsbycourse/61?token=s1kQ81Cn7fcVkeEibwMI0fbB4m7g-9-P";
+    private static final String mUrlAPILicoes ="http://10.0.2.2/kuicly/backend/web/api/lessons/lessonsbycourse/52?token=pzziFplaKNl6L-dnKUBBz1pdAwk3rNj0";
 
-    private static final String TOKEN="s1kQ81Cn7fcVkeEibwMI0fbB4m7g-9-P";
+    private static final String mUrlAPICarrinho ="http://10.0.2.2/kuicly/backend/web/api/carts/";
+
+    private String token_user="";
 
     private String login;
     private CursosListener cursosListner;
@@ -51,6 +62,9 @@ public class SingletonGestorCursos {
     private LicaoListener licaoListner;
 
     private LicoesListener licoesListner;
+
+    private CarrinhoItensListener carrinhoItensListener;
+    private CarrinhoListener carrinhoListener;
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
         if(instance == null) {
@@ -88,6 +102,14 @@ public class SingletonGestorCursos {
         this.licoesListner = licoesListner;
     }
 
+    public void setCarrinhoItensListener(CarrinhoItensListener carrinhoItensListener) {
+        this.carrinhoItensListener = carrinhoItensListener;
+    }
+
+    public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
+        this.carrinhoListener = carrinhoListener;
+    }
+
     /*public void adicionarALLCursosBD(ArrayList<Curso> cursos){
         cursosBD.removerAllCursosBD();
         for(Curso curso: cursos){
@@ -122,6 +144,15 @@ public class SingletonGestorCursos {
         for(Licao licao: licoes){
             if(licao.getId() == id){
                 return licao;
+            }
+        }
+        return null;
+    }
+
+    public Carrinho getCarrinho(int id){
+        for(Carrinho carrinho: carrinhos){
+            if(carrinho.getId() == id){
+                return carrinho;
             }
         }
         return null;
@@ -175,7 +206,7 @@ public class SingletonGestorCursos {
                 cursosListner.onRefreshListaCursos(cursos);
             }*/
         }else{
-            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"?token="+token_user,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
@@ -196,17 +227,17 @@ public class SingletonGestorCursos {
             volleyQueue.add(req);
         }
     }
-    /*public void removerCursoAPI(final Curso curso, final Context context){
+    public void removerCarrinhoItemAPI(final Carrinho carrinho, final Context context){
         if(!CursoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
         }else{
-            StringRequest req=new StringRequest(Request.Method.DELETE, mUrlAPICursos+"/"+curso.getId(), new Response.Listener<String>() {
+            StringRequest req=new StringRequest(Request.Method.DELETE, mUrlAPICursos+"/"+carrinho.getId(), new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 
-                    removerCursoBD(curso.getId());
-                    if(cursoListner != null){
-                        cursoListner.onRefreshDetalhes(MainActivity.DELETE);
+                    //removerItemBD(curso.getId());
+                    if(carrinhoListener != null){
+                        carrinhoListener.onRefreshDetalhes(CarrinhoActivity.DELETE);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -217,7 +248,7 @@ public class SingletonGestorCursos {
             });
             volleyQueue.add(req);
         }
-    }*/
+    }
 
     /*public void editarCursoAPI(final Curso curso, final Context context){
         if(!CursoJsonParser.isConnectionInternet(context)){
@@ -269,7 +300,7 @@ public class SingletonGestorCursos {
                                 String token = loginJSON.getString("token");
 
                                 login = LoginJsonParser.parserJsonLogin(response);
-
+                                token_user=token;
                                 SharedPreferences sharedToken = context.getSharedPreferences("DADOS", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedToken.edit();
                                 editor.putString("token", token);
@@ -319,6 +350,36 @@ public class SingletonGestorCursos {
 
                     if(licoesListner != null){
                         licoesListner.onRefreshListaLicoes(licoes);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getAllCarrinhoItensAPI(final Context context){
+        if(!LicaoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+          /*  cursos=getCursosBD();
+            if(cursosListner != null){
+                cursosListner.onRefreshListaCursos(cursos);
+            }*/
+        }else{
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPILicoes,null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                    carrinhoItens= CarrinhoItensJsonParser.parserJsonCarrinhoItens(response);
+                    //adicionarALLCursosBD(cursos);
+
+                    if(carrinhoItensListener != null){
+                        carrinhoItensListener.onRefreshListaCarrinhoItens(carrinhoItens);
                     }
 
                 }

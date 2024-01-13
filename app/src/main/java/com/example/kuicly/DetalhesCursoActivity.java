@@ -1,14 +1,21 @@
 package com.example.kuicly;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -18,6 +25,7 @@ import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.modelo.Curso;
 import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener {
 
@@ -30,6 +38,8 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             "http://amsi.dei.estg.ipleiria.pt/img/ipl_semfundo.png";
 
     private Curso curso;
+    private NavigationView navigationView;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +49,7 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         etTitulo = findViewById(R.id.etTitulo);
         etDescricao = findViewById(R.id.etDescricao);
         imgCapa = findViewById(R.id.imgCapa);
-        fabGuardar = findViewById(R.id.fabGuardar);
+
 
         SingletonGestorCursos.getInstance(getApplicationContext()).setCursoListner(this);
 
@@ -160,6 +170,11 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             }
         }).setIcon(android.R.drawable.ic_delete).show();
     }*/
+
+
+
+
+
 
     @Override
     public void onRefreshDetalhes(int op) {

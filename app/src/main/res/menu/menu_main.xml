@@ -8,6 +8,10 @@
             android:title="@string/txt_menu_curso"
             android:icon="@drawable/ic_menu_estatico"
             android:id="@+id/navCurso" />
+        <item
+            android:title="@string/txt_menu_carrinho"
+            android:icon="@drawable/ic_menu_estatico"
+            android:id="@+id/navCarrinho" />
 
     </group>
 
