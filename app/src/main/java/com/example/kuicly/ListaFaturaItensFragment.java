@@ -1,8 +1,6 @@
 package com.example.kuicly;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,28 +13,28 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.kuicly.adaptadores.ListaCarrinhoItensAdaptador;
-import com.example.kuicly.adaptadores.ListaCursosAdaptador;
-import com.example.kuicly.listners.CarrinhoItensListener;
+import com.example.kuicly.adaptadores.ListaFaturaItensAdaptador;
+import com.example.kuicly.listners.FaturaItensListener;
 import com.example.kuicly.modelo.Carrinho;
 import com.example.kuicly.modelo.CarrinhoItens;
-import com.example.kuicly.modelo.Curso;
+import com.example.kuicly.modelo.FaturaItens;
 import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 
-public class ListaCarrinhoItensFragment extends Fragment implements CarrinhoItensListener {
+public class ListaFaturaItensFragment extends Fragment implements FaturaItensListener {
 
 
-    private ListView lvCarrinhoItens; //objeto gráfico
-    private ArrayList<CarrinhoItens> carrinhoItens; //modelo
+    private ListView lvFaturaItens; //objeto gráfico
+    private ArrayList<FaturaItens> faturaItens; //modelo
 
     private FloatingActionButton fabLista;
     private SearchView searchView;
 
 
-    public ListaCarrinhoItensFragment() {
+    public ListaFaturaItensFragment() {
         // Required empty public constructor
     }
 
@@ -44,30 +42,28 @@ public class ListaCarrinhoItensFragment extends Fragment implements CarrinhoIten
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_lista_carrinho_itens , container , false);
+        View view = inflater.inflate(R.layout.fragment_lista_fatura_itens , container , false);
         setHasOptionsMenu(true);
 
-
-
-        lvCarrinhoItens = view.findViewById(R.id.lvCarrinhoItens);
-        SingletonGestorCursos.getInstance(getContext()).setCarrinhoItensListener(this);
-        SingletonGestorCursos.getInstance(getContext()).getAllCarrinhoItensAPI(getContext());
+        lvFaturaItens = view.findViewById(R.id.lvFaturaItens);
+        SingletonGestorCursos.getInstance(getContext()).setFaturaListner(this);
+        SingletonGestorCursos.getInstance(getContext()).getAllCursosAPI(getContext());
 
         //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
         //click num item da lista
-        lvCarrinhoItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvFaturaItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
-                intent.putExtra(CarrinhoActivity.ID_CARRINHO_ITENS,(int) id);
+                intent.putExtra(DetalhesCursoActivity.ID_CURSO,(int) id);
+
                 //startActivity(intent);
-                //startActivityForResult(intent , MainActivity.EDIT);
+                startActivityForResult(intent , MainActivity.EDIT);
 
             }
         });
         //click no floating btn
-        /*fabLista = view.findViewById(R.id.fabLista);
+       /* fabLista = view.findViewById(R.id.fabLista);
         fabLista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,12 +75,10 @@ public class ListaCarrinhoItensFragment extends Fragment implements CarrinhoIten
 
         return view;
     }
-
-
     @Override
-    public void onRefreshListaCarrinhoItens(ArrayList<CarrinhoItens> listaCarrinhoItens) {
-        if(listaCarrinhoItens!=null){
-            lvCarrinhoItens.setAdapter(new ListaCarrinhoItensAdaptador(getContext(),listaCarrinhoItens));
+    public void onRefreshListaFaturaItens(ArrayList<FaturaItens> listaFaturaItens) {
+        if(listaFaturaItens!=null){
+            lvFaturaItens.setAdapter(new ListaFaturaItensAdaptador(getContext(),listaFaturaItens));
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.example.kuicly;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,9 +42,12 @@ public class ListaLicoesFragment extends Fragment implements LicoesListener {
         View view = inflater.inflate(R.layout.fragment_lista_licoes , container , false);
         setHasOptionsMenu(true);
 
+        SharedPreferences sharedCurso = getActivity().getSharedPreferences("DADOS_CURSO", Context.MODE_PRIVATE);
+        int cursoid = sharedCurso.getInt("cursoid", 0);
+
         lvLicoes = view.findViewById(R.id.lvLicoes);
         SingletonGestorCursos.getInstance(getContext()).setLicoesListner(this);
-        SingletonGestorCursos.getInstance(getContext()).getAllLicoesAPI(getContext());
+        SingletonGestorCursos.getInstance(getContext()).getAllLicoesAPI(cursoid,getContext());
 
         //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
         //click num item da lista

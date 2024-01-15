@@ -55,13 +55,14 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
                 intent.putExtra(DetalhesCursoActivity.ID_CURSO,(int) id);
+
                 //startActivity(intent);
                 startActivityForResult(intent , MainActivity.EDIT);
 
             }
         });
         //click no floating btn
-        fabLista = view.findViewById(R.id.fabLista);
+       /* fabLista = view.findViewById(R.id.fabLista);
         fabLista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +70,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
                 //startActivity(intent);
                 startActivityForResult(intent , MainActivity.ADD);
             }
-        });
+        });*/
 
         return view;
     }

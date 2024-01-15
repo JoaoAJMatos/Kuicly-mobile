@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -32,8 +34,9 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
     public static final String ID_CURSO = "id";
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
     private TextView etTitulo, etDescricao, etSerie, etAno;
-    private FloatingActionButton fabGuardar;
     private ImageView imgCapa;
+
+    private Button btnAddCarrinho;
     public static final String DEFAULT_IMG =
             "http://amsi.dei.estg.ipleiria.pt/img/ipl_semfundo.png";
 
@@ -49,14 +52,20 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         etTitulo = findViewById(R.id.etTitulo);
         etDescricao = findViewById(R.id.etDescricao);
         imgCapa = findViewById(R.id.imgCapa);
+        btnAddCarrinho= findViewById(R.id.btnAddCarrinho);
+
 
 
         SingletonGestorCursos.getInstance(getApplicationContext()).setCursoListner(this);
 
         int id = getIntent().getIntExtra(ID_CURSO,0);
         if (id > 0) {
-            curso = SingletonGestorCursos.getInstance(getApplicationContext()).getCurso(id);//erro getlivrosbd nao faço ideia como é
+            curso = SingletonGestorCursos.getInstance(getApplicationContext()).getCurso(id);
             if (curso != null) {
+                SharedPreferences sharedCurso = getSharedPreferences("DADOS_CURSO", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedCurso.edit();
+                editor.putInt("cursoid", curso.getId());
+                editor.apply();
                 carregarInfoCurso();
                 //fabGuardar.setImageResource(R.drawable.ic_action_guardar);
             }else {
@@ -92,12 +101,23 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         });*/
 
 
+        btnAddCarrinho.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SingletonGestorCursos.getInstance(getApplicationContext()).adicionarCarrinhoItemAPI(curso,getApplicationContext());
+                showToast("Produto adicionado ao carrinho!");
+            }
+        });
+
+
         Fragment fragment = new ListaLicoesFragment();
         FragmentManager fragmentManager=getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
     }
 
-
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
     private boolean isLivroValido() {
         String titulo = etTitulo.getText().toString();

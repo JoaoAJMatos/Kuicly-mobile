@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.kuicly.listners.CarrinhoItensListener;
 import com.example.kuicly.listners.CarrinhoListener;
 import com.example.kuicly.modelo.Carrinho;
+import com.example.kuicly.modelo.CarrinhoItens;
 import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,9 +30,11 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoListe
     public static final String ID_CARRINHO = "id";
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
     private TextView tvTotal;
-    public static final int DELETE=300;
+    public static final int ADD=100,DELETE=300;
 
     private Carrinho carrinho;
+
+    private CarrinhoItens carrinhoItens;
 
     public static final String DEFAULT_IMG =
             "http://amsi.dei.estg.ipleiria.pt/img/ipl_semfundo.png";
@@ -119,7 +122,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoListe
             builder.setTitle("Remover Item do Carrinho").setMessage("Tem a certeza que pretende remover o item").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    SingletonGestorCursos.getInstance(getApplicationContext()).removerCarrinhoItemAPI(carrinho,getApplicationContext());
+                    SingletonGestorCursos.getInstance(getApplicationContext()).removerCarrinhoItemAPI(carrinhoItens,getApplicationContext());
 
                 }
             }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

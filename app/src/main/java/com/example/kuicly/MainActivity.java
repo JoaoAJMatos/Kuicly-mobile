@@ -1,5 +1,6 @@
 package com.example.kuicly;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -82,17 +83,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
+
         if(item.getItemId()==R.id.navCurso) {
             //System.out.println("-->Nav Estatico"); Não funciona pois estava a enviar uma mensagem para a consola
             //fragment = new EstaticoFragment();
             fragment = new ListaCursosFragment();
             setTitle(item.getTitle());
         }else if(item.getItemId()==R.id.navCarrinho) {
-            fragment = new ListaCarrinhoItensFragment();
+            Intent intent = new Intent(this, CarrinhoActivity.class);
+            startActivity(intent);
             setTitle(item.getTitle());
         }
         else if(item.getItemId()== R.id.navLogout) {
-            SharedPreferences sharedPreferencesEmailUser = getSharedPreferences("DADOS", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferencesEmailUser = getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
             SharedPreferences.Editor editorUser = sharedPreferencesEmailUser.edit();
             editorUser.clear();
             editorUser.apply();

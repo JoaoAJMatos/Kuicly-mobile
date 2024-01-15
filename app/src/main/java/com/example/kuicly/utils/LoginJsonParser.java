@@ -14,6 +14,7 @@ public class LoginJsonParser {
         try {
             JSONObject loginJSON = new JSONObject(response);
             token = loginJSON.getString("token");
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

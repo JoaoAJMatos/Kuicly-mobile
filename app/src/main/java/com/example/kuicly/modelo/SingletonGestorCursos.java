@@ -12,15 +12,19 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kuicly.CarrinhoActivity;
+import com.example.kuicly.listners.CarrinhoItemListener;
 import com.example.kuicly.listners.CarrinhoItensListener;
 import com.example.kuicly.listners.CarrinhoListener;
 import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.listners.CursosListener;
+import com.example.kuicly.listners.FaturaItensListener;
 import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
 import com.example.kuicly.utils.CarrinhoItensJsonParser;
 import com.example.kuicly.utils.CursoJsonParser;
+import com.example.kuicly.utils.FaturaItensJsonParser;
+import com.example.kuicly.utils.FaturaJsonParser;
 import com.example.kuicly.utils.LicaoJsonParser;
 import com.example.kuicly.utils.LoginJsonParser;
 
@@ -39,7 +43,9 @@ public class SingletonGestorCursos {
 
     private ArrayList<CarrinhoItens> carrinhoItens;
 
+    private ArrayList<FaturaItens> faturasItens;
 
+    private ArrayList<Fatura> faturas;
     private static SingletonGestorCursos instance = null;
 
     private CursoBDHelper CursoBD= null;
@@ -48,13 +54,15 @@ public class SingletonGestorCursos {
     private static final String mUrlAPICursos = "http://10.0.2.2/kuicly/backend/web/api/courses/courses";
     private static final String mUrlAPILogin = "http://10.0.2.2/kuicly/backend/web/api/logins/login";
 
-    private static final String mUrlAPILicoes ="http://10.0.2.2/kuicly/backend/web/api/lessons/lessonsbycourse/52?token=pzziFplaKNl6L-dnKUBBz1pdAwk3rNj0";
+    private static final String mUrlAPILicoes ="http://10.0.2.2/kuicly/backend/web/api/lessons";
 
-    private static final String mUrlAPICarrinho ="http://10.0.2.2/kuicly/backend/web/api/carts/";
+    private static final String mUrlAPICarrinho ="http://10.0.2.2/kuicly/backend/web/api/carts";
 
-    private String token_user="";
+    private static final String mUrlAPIFatura ="http://10.0.2.2/kuicly/backend/web/api/orders";
 
     private String login;
+
+    private Fatura fatura;
     private CursosListener cursosListner;
     private CursoListener cursoListner;
     private LoginListener loginListener;
@@ -64,7 +72,13 @@ public class SingletonGestorCursos {
     private LicoesListener licoesListner;
 
     private CarrinhoItensListener carrinhoItensListener;
+
+    private CarrinhoItemListener carrinhoItemListener;
+
     private CarrinhoListener carrinhoListener;
+
+    private FaturaItensListener faturaItensListener;
+
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
         if(instance == null) {
@@ -106,9 +120,19 @@ public class SingletonGestorCursos {
         this.carrinhoItensListener = carrinhoItensListener;
     }
 
+    public void setCarrinhoItemListener(CarrinhoItemListener carrinhoItemListener) {
+        this.carrinhoItemListener = carrinhoItemListener;
+    }
+
     public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
         this.carrinhoListener = carrinhoListener;
     }
+
+    public void setFaturaItensListener(FaturaItensListener faturaItensListener) {
+        this.faturaItensListener = faturaItensListener;
+    }
+
+
 
     /*public void adicionarALLCursosBD(ArrayList<Curso> cursos){
         cursosBD.removerAllCursosBD();
@@ -158,47 +182,30 @@ public class SingletonGestorCursos {
         return null;
     }
 
-    //region PEDIDOS API
-    /*public void adicionarLivroAPI(final Curso curso, final Context context){
-        if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-        }else{
-            StringRequest req=new StringRequest(Request.Method.POST, mUrlAPICursos, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-
-                    adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
-
-                    if(cursoListner != null){
-                        cursoListner.onRefreshDetalhes(MainActivity.ADD);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }){
-
-                @Override
-                protected Map<String, String> getParams(){
-                    Map<String,String> params = new HashMap<>();
-                    //params.put("token",TOKEN);
-                    params.put("titulo", curso.getTitle());
-                    params.put("descricao", curso.getDescription());
-                    params.put("preco", curso.getPrice()+"");
-                    params.put("skill_level", curso.getSkill_level()+"");
-
-
-                    return params;
-                }
-            };
-            volleyQueue.add(req);
+    public FaturaItens getFaturaItens(int id){
+        for(FaturaItens faturaItens: faturasItens){
+            if(faturaItens.getId() == id){
+                return faturaItens;
+            }
         }
+        return null;
+    }
 
-    }*/
+    public Fatura getFatura(int id){
+        for(Fatura fatura: faturas){
+            if(fatura.getId() == id){
+                return fatura;
+            }
+        }
+        return null;
+    }
+
+    //region PEDIDOS API
+
 
     public void getAllCursosAPI(final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
         if(!CursoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
           /*  cursos=getCursosBD();
@@ -206,12 +213,13 @@ public class SingletonGestorCursos {
                 cursosListner.onRefreshListaCursos(cursos);
             }*/
         }else{
-            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"?token="+token_user,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"?token="+token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
                     cursos= CursoJsonParser.parserJsonCursos(response);
                     //adicionarALLCursosBD(cursos);
+
 
                     if(cursosListner != null){
                         cursosListner.onRefreshListaCursos(cursos);
@@ -227,28 +235,7 @@ public class SingletonGestorCursos {
             volleyQueue.add(req);
         }
     }
-    public void removerCarrinhoItemAPI(final Carrinho carrinho, final Context context){
-        if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-        }else{
-            StringRequest req=new StringRequest(Request.Method.DELETE, mUrlAPICursos+"/"+carrinho.getId(), new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
 
-                    //removerItemBD(curso.getId());
-                    if(carrinhoListener != null){
-                        carrinhoListener.onRefreshDetalhes(CarrinhoActivity.DELETE);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            volleyQueue.add(req);
-        }
-    }
 
     /*public void editarCursoAPI(final Curso curso, final Context context){
         if(!CursoJsonParser.isConnectionInternet(context)){
@@ -298,12 +285,14 @@ public class SingletonGestorCursos {
                             try{
                                 JSONObject loginJSON = new JSONObject(response);
                                 String token = loginJSON.getString("token");
+                                int id = loginJSON.getInt("id");
 
                                 login = LoginJsonParser.parserJsonLogin(response);
-                                token_user=token;
-                                SharedPreferences sharedToken = context.getSharedPreferences("DADOS", Context.MODE_PRIVATE);
+
+                                SharedPreferences sharedToken = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedToken.edit();
                                 editor.putString("token", token);
+                                editor.putInt("id", id);
                                 editor.apply();
 
                                 if (loginListener != null) {
@@ -333,7 +322,9 @@ public class SingletonGestorCursos {
             volleyQueue.add(request); // Adicione a requisição à fila do Volley para ser executada
         }
     }
-    public void getAllLicoesAPI(final Context context){
+    public void getAllLicoesAPI(int cursoId,final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
         if(!LicaoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
           /*  cursos=getCursosBD();
@@ -341,7 +332,7 @@ public class SingletonGestorCursos {
                 cursosListner.onRefreshListaCursos(cursos);
             }*/
         }else{
-            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPILicoes,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPILicoes+"/lessonsbycourse/"+cursoId+"?token="+token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
@@ -364,14 +355,145 @@ public class SingletonGestorCursos {
     }
 
     public void getAllCarrinhoItensAPI(final Context context){
-        if(!LicaoJsonParser.isConnectionInternet(context)){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        int id= preferences.getInt("id",0);
+        String token= preferences.getString("token","");
+
+        if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
           /*  cursos=getCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
             }*/
         }else{
-            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPILicoes,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/items?token="+ token,null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                    carrinhoItens= CarrinhoItensJsonParser.parserJsonCarrinhoItens(response);
+                    //adicionarALLCursosBD(cursos);
+
+                    if(carrinhoItensListener != null){
+                        carrinhoItensListener.onRefreshListaCarrinhoItens(carrinhoItens);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+    public void removerCarrinhoItemAPI(final CarrinhoItens carrinhoItem, final Context context)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        int id= preferences.getInt("id",0);
+        String token= preferences.getString("token","");
+        if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.DELETE, mUrlAPICarrinho+"/"+id+"/course/"+carrinhoItem.getId()+"?token"+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    //removerItemBD(curso.getId());
+                    if(carrinhoItemListener != null){
+                        carrinhoItemListener.onRefreshDetalhes(CarrinhoActivity.DELETE);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void adicionarCarrinhoItemAPI(final Curso curso, final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        int id= preferences.getInt("id",0);
+        String token= preferences.getString("token","");
+        if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/course/"+curso.getId()+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    //adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
+
+                    if(carrinhoItemListener != null){
+                        carrinhoItemListener.onRefreshDetalhes(CarrinhoActivity.ADD);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+
+    }
+
+    public void getPagamentoAPI(final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        int id= preferences.getInt("id",0);
+        String token= preferences.getString("token","");
+
+        if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+          /*  cursos=getCursosBD();
+            if(cursosListner != null){
+                cursosListner.onRefreshListaCursos(cursos);
+            }*/
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/payment/"+id+"?token"+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    fatura = FaturaJsonParser.parserJsonFatura(response);
+                    //adicionarALLCursosBD(cursos);
+
+                    SharedPreferences SharedFatura = context.getSharedPreferences("DADOS_FATURA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = SharedFatura.edit();
+                    editor.putInt("order_id", fatura.getId());
+                    editor.apply();
+
+                    if(carrinhoItensListener != null){
+                        carrinhoItensListener.onRefreshListaCarrinhoItens(carrinhoItens);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getAllFaturasItensAPI(final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
+        SharedPreferences SharedFatura = context.getSharedPreferences("DADOS_FATURA", Context.MODE_PRIVATE);
+        int id= SharedFatura.getInt("order_id",0);
+        if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+          /*  cursos=getCursosBD();
+            if(cursosListner != null){
+                cursosListner.onRefreshListaCursos(cursos);
+            }*/
+        }else{
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPIFatura+"/"+id+"/items?token="+ token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 

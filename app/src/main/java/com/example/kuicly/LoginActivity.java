@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener{
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(USER, etUsername.getText().toString());
 
-            SharedPreferences sharedToken  = getSharedPreferences("DADOS", MODE_PRIVATE);
+            SharedPreferences sharedToken  = getSharedPreferences("DADOS_USER", MODE_PRIVATE);
             SharedPreferences.Editor editor  = sharedToken.edit();
             editor.putString("username", etUsername.getText().toString());
             editor.apply();
