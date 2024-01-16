@@ -21,11 +21,11 @@ public class FaturaItensJsonParser {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject faturaItensJSON = (JSONObject) response.get(i);
                 int id = faturaItensJSON.getInt("id");
-                String title = faturaItensJSON.getString("title");
                 float price = faturaItensJSON.getInt("price");
                 float iva_price = faturaItensJSON.getInt("iva_price");
                 int order_id = faturaItensJSON.getInt("order_id");
                 int course_id = faturaItensJSON.getInt("course_id");
+                String title = faturaItensJSON.getString("course_title");
                 FaturaItens faturaitem = new FaturaItens(id,order_id,course_id,price,iva_price,title);
                 faturaItens.add(faturaitem);
             }

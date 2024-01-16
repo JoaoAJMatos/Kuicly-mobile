@@ -6,5 +6,5 @@ import com.example.kuicly.modelo.FaturaItens;
 import java.util.ArrayList;
 
 public interface FaturaItensListener {
-    void onRefreshListaCarrinhoItens(ArrayList<FaturaItens> listaFaturaItens);
+    void onRefreshListaFaturaItens(ArrayList<FaturaItens> listaFaturaItens);
 }

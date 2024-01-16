@@ -54,8 +54,8 @@ public class ListaLicoesFragment extends Fragment implements LicoesListener {
         lvLicoes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(getContext() , LessonActivity.class);
-                intent.putExtra(LessonActivity.ID_LICAO,(int) id);
+                Intent intent = new Intent(getContext() , LicaoActivity.class);
+                intent.putExtra(LicaoActivity.ID_LICAO,(int) id);
                 //startActivity(intent);
                 startActivityForResult(intent , MainActivity.EDIT);
 

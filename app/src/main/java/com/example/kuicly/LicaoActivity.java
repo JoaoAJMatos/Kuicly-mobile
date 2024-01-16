@@ -6,13 +6,15 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.modelo.Licao;
 import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class LessonActivity extends AppCompatActivity implements LicaoListener {
+public class LicaoActivity extends AppCompatActivity implements LicaoListener {
 
     public static final String ID_LICAO = "id";
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
@@ -27,7 +29,7 @@ public class LessonActivity extends AppCompatActivity implements LicaoListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lesson);
+        setContentView(R.layout.activity_licao);
 
         etTitulo = findViewById(R.id.etTitulo);
         etContexto = findViewById(R.id.etContexto);
@@ -49,6 +51,10 @@ public class LessonActivity extends AppCompatActivity implements LicaoListener {
             setTitle("Adicionar Livro");
             //fabGuardar.setImageResource(R.drawable.ic_action_adicionar);
         }
+
+        Fragment fragment = new ListaLicoesFragment();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
     }
 
     private void carregarInfoLicao() {

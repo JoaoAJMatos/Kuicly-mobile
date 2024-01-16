@@ -2,6 +2,7 @@ package com.example.kuicly.modelo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -15,13 +16,16 @@ import com.example.kuicly.CarrinhoActivity;
 import com.example.kuicly.listners.CarrinhoItemListener;
 import com.example.kuicly.listners.CarrinhoItensListener;
 import com.example.kuicly.listners.CarrinhoListener;
+import com.example.kuicly.listners.CarrinhoTotalListener;
 import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.listners.CursosListener;
 import com.example.kuicly.listners.FaturaItensListener;
+import com.example.kuicly.listners.FaturaListener;
 import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
 import com.example.kuicly.utils.CarrinhoItensJsonParser;
+import com.example.kuicly.utils.CarrinhoJsonParser;
 import com.example.kuicly.utils.CursoJsonParser;
 import com.example.kuicly.utils.FaturaItensJsonParser;
 import com.example.kuicly.utils.FaturaJsonParser;
@@ -46,6 +50,8 @@ public class SingletonGestorCursos {
     private ArrayList<FaturaItens> faturasItens;
 
     private ArrayList<Fatura> faturas;
+
+    private Carrinho carrinho;
     private static SingletonGestorCursos instance = null;
 
     private CursoBDHelper CursoBD= null;
@@ -77,7 +83,10 @@ public class SingletonGestorCursos {
 
     private CarrinhoListener carrinhoListener;
 
+    private CarrinhoTotalListener carrinhoTotalListener;
+
     private FaturaItensListener faturaItensListener;
+    private FaturaListener faturaListener;
 
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
@@ -128,8 +137,16 @@ public class SingletonGestorCursos {
         this.carrinhoListener = carrinhoListener;
     }
 
+    public void setCarrinhoTotalListener(CarrinhoTotalListener carrinhoTotalListener) {
+        this.carrinhoTotalListener = carrinhoTotalListener;
+    }
+
     public void setFaturaItensListener(FaturaItensListener faturaItensListener) {
         this.faturaItensListener = faturaItensListener;
+    }
+
+    public void setFaturaListener(FaturaListener faturaListener) {
+        this.faturaListener = faturaListener;
     }
 
 
@@ -387,6 +404,40 @@ public class SingletonGestorCursos {
             volleyQueue.add(req);
         }
     }
+
+    public void getCarrinhoAPI(final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        int id= preferences.getInt("id",0);
+        String token= preferences.getString("token","");
+
+        if(!CarrinhoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+          /*  cursos=getCursosBD();
+            if(cursosListner != null){
+                cursosListner.onRefreshListaCursos(cursos);
+            }*/
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    carrinho= CarrinhoJsonParser.parserJsonCarrinho(response);
+                    //adicionarALLCursosBD(cursos);
+
+                    if(carrinhoTotalListener != null){
+                        carrinhoTotalListener.onRefreshTotal(carrinho.getTotal());
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "getCarrinhoAPI erro response", Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
     public void removerCarrinhoItemAPI(final CarrinhoItens carrinhoItem, final Context context)
     {
         SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
@@ -447,14 +498,14 @@ public class SingletonGestorCursos {
         int id= preferences.getInt("id",0);
         String token= preferences.getString("token","");
 
-        if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
+        if(!FaturaJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
           /*  cursos=getCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
             }*/
         }else{
-            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/payment/"+id+"?token"+token, new Response.Listener<String>() {
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/payment/"+id+"?token="+token,  new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 
@@ -465,9 +516,9 @@ public class SingletonGestorCursos {
                     SharedPreferences.Editor editor = SharedFatura.edit();
                     editor.putInt("order_id", fatura.getId());
                     editor.apply();
-
-                    if(carrinhoItensListener != null){
-                        carrinhoItensListener.onRefreshListaCarrinhoItens(carrinhoItens);
+                    Log.e("Erro de Solicitação", "Falha na solicitação: " + fatura.getId());
+                    if(faturaItensListener != null){
+                        faturaItensListener.onRefreshListaFaturaItens(faturasItens);
                     }
 
                 }
@@ -497,11 +548,11 @@ public class SingletonGestorCursos {
                 @Override
                 public void onResponse(JSONArray response) {
 
-                    carrinhoItens= CarrinhoItensJsonParser.parserJsonCarrinhoItens(response);
+                    faturasItens= FaturaItensJsonParser.parserJsonFaturaItens(response);
                     //adicionarALLCursosBD(cursos);
 
-                    if(carrinhoItensListener != null){
-                        carrinhoItensListener.onRefreshListaCarrinhoItens(carrinhoItens);
+                    if(faturaItensListener != null){
+                        faturaItensListener.onRefreshListaFaturaItens(faturasItens);
                     }
 
                 }
@@ -515,5 +566,37 @@ public class SingletonGestorCursos {
         }
     }
 
+    public void getMeusCursosAPI(final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
+        int id= preferences.getInt("id",0);
+        if(!CursoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+          /*  cursos=getCursosBD();
+            if(cursosListner != null){
+                cursosListner.onRefreshListaCursos(cursos);
+            }*/
+        }else{
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+id+"/mycourses/token="+token,null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
 
+                    cursos= CursoJsonParser.parserJsonCursos(response);
+                    //adicionarALLCursosBD(cursos);
+
+
+                    if(cursosListner != null){
+                        cursosListner.onRefreshListaCursos(cursos);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
 }

@@ -12,11 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.example.kuicly.adaptadores.ListaCarrinhoItensAdaptador;
 import com.example.kuicly.adaptadores.ListaFaturaItensAdaptador;
 import com.example.kuicly.listners.FaturaItensListener;
-import com.example.kuicly.modelo.Carrinho;
-import com.example.kuicly.modelo.CarrinhoItens;
 import com.example.kuicly.modelo.FaturaItens;
 import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,8 +43,8 @@ public class ListaFaturaItensFragment extends Fragment implements FaturaItensLis
         setHasOptionsMenu(true);
 
         lvFaturaItens = view.findViewById(R.id.lvFaturaItens);
-        SingletonGestorCursos.getInstance(getContext()).setFaturaListner(this);
-        SingletonGestorCursos.getInstance(getContext()).getAllCursosAPI(getContext());
+        SingletonGestorCursos.getInstance(getContext()).setFaturaItensListener(this);
+        SingletonGestorCursos.getInstance(getContext()).getAllFaturasItensAPI(getContext());
 
         //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
         //click num item da lista
@@ -55,7 +52,7 @@ public class ListaFaturaItensFragment extends Fragment implements FaturaItensLis
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
-                intent.putExtra(DetalhesCursoActivity.ID_CURSO,(int) id);
+                intent.putExtra(FaturaActivity.ID_FATURA,(int) id);
 
                 //startActivity(intent);
                 startActivityForResult(intent , MainActivity.EDIT);

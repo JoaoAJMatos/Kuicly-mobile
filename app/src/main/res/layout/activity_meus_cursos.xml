@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="5dp"
-    tools:context=".CarrinhoActivity">
+    tools:context=".MeusCursosActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Detalhes da Fatura"
+                android:text="Meus Cursos"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp"/>
@@ -29,29 +29,6 @@
                 android:id="@+id/contentFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-            <!-- Detalhes da fatura -->
-            <TextView
-                android:id="@+id/tvIvaTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="IvaTotal: "
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp"/>
-            <TextView
-                android:id="@+id/tvSubTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SubTotal: "
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp"/>
-            <TextView
-                android:id="@+id/tvTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total: "
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp"/>
 
             <View
                 android:id="@+id/view2"

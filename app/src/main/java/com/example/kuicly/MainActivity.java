@@ -19,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new ListaCursosFragment();
             setTitle(item.getTitle());
         }else if(item.getItemId()==R.id.navCarrinho) {
+            SingletonGestorCursos.getInstance(getApplicationContext()).getCarrinhoAPI(getApplicationContext());
             Intent intent = new Intent(this, CarrinhoActivity.class);
             startActivity(intent);
             setTitle(item.getTitle());

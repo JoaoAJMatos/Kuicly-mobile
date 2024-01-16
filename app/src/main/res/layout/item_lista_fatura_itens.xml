@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nome do Produto"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginEnd="8dp"
              />
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Iva Preço"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:layout_marginEnd="8dp"
              />
 
@@ -45,7 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Preço"
-            android:textSize="14sp" />
+            android:textSize="18sp"
+            />
 
 
     </LinearLayout>

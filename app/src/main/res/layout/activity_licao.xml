@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="5dp"
-    tools:context=".LessonActivity">
+    tools:context=".LicaoActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -37,6 +37,23 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:text="Descrição da Lesson" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp"/>
+
+            <TextView
+                android:id="@+id/etAulas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:text="Outras Aulas" />
+
+            <FrameLayout
+                android:id="@+id/contentFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <View
                 android:id="@+id/view2"
