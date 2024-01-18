@@ -13,6 +13,11 @@
             android:icon="@drawable/ic_menu_estatico"
             android:id="@+id/navCarrinho" />
 
+        <item
+            android:title="@string/txt_menu_meus_cursos"
+            android:icon="@drawable/ic_menu_estatico"
+            android:id="@+id/navMeusCursos" />
+
     </group>
 
     <item android:title="@string/txt_comunicar">

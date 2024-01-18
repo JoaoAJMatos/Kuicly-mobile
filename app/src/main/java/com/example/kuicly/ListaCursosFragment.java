@@ -56,6 +56,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
                 Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
                 intent.putExtra(DetalhesCursoActivity.ID_CURSO,(int) id);
 
+
                 //startActivity(intent);
                 startActivityForResult(intent , MainActivity.EDIT);
 

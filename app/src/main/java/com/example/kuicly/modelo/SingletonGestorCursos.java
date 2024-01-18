@@ -24,6 +24,8 @@ import com.example.kuicly.listners.FaturaListener;
 import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
+import com.example.kuicly.listners.MeusCursosListener;
+import com.example.kuicly.listners.TemCursoListener;
 import com.example.kuicly.utils.CarrinhoItensJsonParser;
 import com.example.kuicly.utils.CarrinhoJsonParser;
 import com.example.kuicly.utils.CursoJsonParser;
@@ -57,7 +59,7 @@ public class SingletonGestorCursos {
     private CursoBDHelper CursoBD= null;
 
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPICursos = "http://10.0.2.2/kuicly/backend/web/api/courses/courses";
+    private static final String mUrlAPICursos = "http://10.0.2.2/kuicly/backend/web/api/courses";
     private static final String mUrlAPILogin = "http://10.0.2.2/kuicly/backend/web/api/logins/login";
 
     private static final String mUrlAPILicoes ="http://10.0.2.2/kuicly/backend/web/api/lessons";
@@ -68,6 +70,7 @@ public class SingletonGestorCursos {
 
     private String login;
 
+    private boolean temCurso = false;
     private Fatura fatura;
     private CursosListener cursosListner;
     private CursoListener cursoListner;
@@ -87,6 +90,10 @@ public class SingletonGestorCursos {
 
     private FaturaItensListener faturaItensListener;
     private FaturaListener faturaListener;
+
+    private MeusCursosListener meusCursosListener;
+
+    private TemCursoListener temCursoListener;
 
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
@@ -112,10 +119,7 @@ public class SingletonGestorCursos {
     public void setCursoListner(CursoListener cursoListner) {
         this.cursoListner = cursoListner;
     }
-    public ArrayList<Curso> getCursosBD(){
-        cursos = CursoBD.getAllCursosBD();
-        return new ArrayList<>(cursos);
-    }
+
 
     public void setLicaoListner(LicaoListener licaoListner) {
         this.licaoListner = licaoListner;
@@ -149,28 +153,30 @@ public class SingletonGestorCursos {
         this.faturaListener = faturaListener;
     }
 
+    public void setMeusCursosListener(MeusCursosListener meusCursosListener) {
+        this.meusCursosListener = meusCursosListener;
+    }
+
+    public void setTemCursoListener(TemCursoListener temCursoListener) {
+        this.temCursoListener = temCursoListener;
+    }
 
 
-    /*public void adicionarALLCursosBD(ArrayList<Curso> cursos){
-        cursosBD.removerAllCursosBD();
+
+    public void adicionarALLCursosBD(ArrayList<Curso> cursos){
+        CursoBD.removerAllCursosBD();
         for(Curso curso: cursos){
             adicionarCursoBD(curso);
         }
-    }*/
-    /*ublic void adicionarCursoBD(Curso curso){
-        cursosBD.adicionarCursoBD(curso);
+    }
+    public void adicionarCursoBD(Curso curso){
+        CursoBD.adicionarCursoBD(curso);
     }
 
-    public void editarCursoBD(Curso curso){
-
-        if(curso != null) {
-            cursosBD.editarCursoBD(curso);
-        }
+    public ArrayList<Curso> getCursosBD(){
+        cursos = CursoBD.getAllCursosBD();
+        return new ArrayList<>(cursos);
     }
-
-    public void removerCursoBD(int idCurso){
-        cursosBD.removerCursoBD(idCurso);
-    }*/
 
     public Curso getCurso(int id){
         for(Curso curso: cursos){
@@ -225,12 +231,12 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         if(!CursoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-          /*  cursos=getCursosBD();
+            cursos= CursoBD.getAllCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
-            }*/
+            }
         }else{
-            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"?token="+token,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"/courses?token="+token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
@@ -510,15 +516,15 @@ public class SingletonGestorCursos {
                 public void onResponse(String response) {
 
                     fatura = FaturaJsonParser.parserJsonFatura(response);
-                    //adicionarALLCursosBD(cursos);
+
 
                     SharedPreferences SharedFatura = context.getSharedPreferences("DADOS_FATURA", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = SharedFatura.edit();
                     editor.putInt("order_id", fatura.getId());
                     editor.apply();
                     Log.e("Erro de Solicitação", "Falha na solicitação: " + fatura.getId());
-                    if(faturaItensListener != null){
-                        faturaItensListener.onRefreshListaFaturaItens(faturasItens);
+                    if(faturaListener != null){
+                        faturaListener.onRefreshDetalhes(fatura.getTotal_price(),fatura.getSubtotal(),fatura.getTotaliva());
                     }
 
                 }
@@ -572,21 +578,21 @@ public class SingletonGestorCursos {
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-          /*  cursos=getCursosBD();
+            cursos= CursoBD.getAllCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
-            }*/
+            }
         }else{
-            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+id+"/mycourses/token="+token,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"/"+id+"/mycourses?token="+token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
                     cursos= CursoJsonParser.parserJsonCursos(response);
-                    //adicionarALLCursosBD(cursos);
+                    adicionarALLCursosBD(cursos);
 
 
-                    if(cursosListner != null){
-                        cursosListner.onRefreshListaCursos(cursos);
+                    if(meusCursosListener != null){
+                        meusCursosListener.onRefreshListaMeusCursos(cursos);
                     }
 
                 }
@@ -598,5 +604,39 @@ public class SingletonGestorCursos {
             });
             volleyQueue.add(req);
         }
+    }
+
+    public void temCurso(int cursoId,final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
+        int id= preferences.getInt("id",0);
+        if(!CursoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICursos+"/"+id+"/hascourse/"+cursoId+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    //adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
+                    response = response.trim();
+                    temCurso = Boolean.valueOf(response);
+
+
+                    if(temCursoListener != null){
+                        temCursoListener.onRefreshTemCurso(temCurso);
+                    }
+                    /*if(cursoListner != null){
+                        cursoListner.onRefreshDetalhes(MainActivity.EDIT);
+                    }*/
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "tem Curso erro response", Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+
     }
 }

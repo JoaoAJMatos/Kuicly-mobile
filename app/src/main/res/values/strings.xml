@@ -9,6 +9,7 @@
     <string name="txt_bemvindo">Bem_vindo!</string>
     <string name="txt_menu_curso">Cursos</string>
     <string name="txt_menu_carrinho">Carrinho</string>
+    <string name="txt_menu_meus_cursos">Meus Cursos</string>
     <string name="txt_menu_dinamico">Livro (Grelha)</string>
     <string name="txt_comunicar">Comunicar</string>
     <string name="txt_menu_logout">Logout</string>

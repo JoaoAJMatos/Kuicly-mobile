@@ -1,5 +1,6 @@
 package com.example.kuicly.modelo;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,7 +18,7 @@ public class CursoBDHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
 
-    private static final String ID = "id",DESCRIPTION = "description",  TITLE = "title", PRICE = "price", SKILL_LEVEL = "skill_level", CAPA = "file";
+    private static final String ID = "id",DESCRIPTION = "description",  TITLE = "title", PRICE = "price", SKILL_LEVEL = "skill_level", CAPA = "file_id";
 
     public CursoBDHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -43,7 +44,7 @@ public class CursoBDHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String sqlTableCursos = "CREATE TABLE " + TABLE_NAME + "(" +
                 ID + " INTEGER PRIMARY KEY, " +
                 DESCRIPTION + " TEXT NOT NULL, " +
@@ -52,11 +53,24 @@ public class CursoBDHelper extends SQLiteOpenHelper {
                 SKILL_LEVEL + " INTEGER NOT NULL," +
                 CAPA + " TEXT NOT NULL" +
                 ");";
-        db.execSQL(sqlTableCursos);
+        sqLiteDatabase.execSQL(sqlTableCursos);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        sqLiteDatabase.execSQL( "DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(sqLiteDatabase);
+    }
 
+    public Curso adicionarCursoBD(Curso livro){
+        ContentValues values = new ContentValues();
+        values.put(ID, livro.getId());
+        values.put(DESCRIPTION, livro.getDescription());
+        values.put(TITLE, livro.getTitle());
+        values.put(PRICE, livro.getPrice());
+        values.put(SKILL_LEVEL, livro.getSkill_level());
+        values.put(CAPA, livro.getCapa());
+        db.insert(TABLE_NAME, null, values);
+        return livro;
     }
 }

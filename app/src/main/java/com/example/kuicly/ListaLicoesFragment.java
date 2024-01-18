@@ -48,6 +48,7 @@ public class ListaLicoesFragment extends Fragment implements LicoesListener {
         lvLicoes = view.findViewById(R.id.lvLicoes);
         SingletonGestorCursos.getInstance(getContext()).setLicoesListner(this);
         SingletonGestorCursos.getInstance(getContext()).getAllLicoesAPI(cursoid,getContext());
+        //SingletonGestorCursos.getInstance(getContext()).temCurso(cursoid,getContext());
 
         //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
         //click num item da lista

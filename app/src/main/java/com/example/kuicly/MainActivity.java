@@ -95,6 +95,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, CarrinhoActivity.class);
             startActivity(intent);
             setTitle(item.getTitle());
+
+        }else if(item.getItemId()==R.id.navMeusCursos) {
+            SingletonGestorCursos.getInstance(getApplicationContext()).getMeusCursosAPI(getApplicationContext());
+            Intent intent = new Intent(this, MeusCursosActivity.class);
+            startActivity(intent);
+            setTitle(item.getTitle());
         }
         else if(item.getItemId()== R.id.navLogout) {
             SharedPreferences sharedPreferencesEmailUser = getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);

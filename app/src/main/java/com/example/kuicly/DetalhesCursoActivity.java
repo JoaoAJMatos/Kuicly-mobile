@@ -24,12 +24,13 @@ import androidx.fragment.app.FragmentManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.kuicly.listners.CursoListener;
+import com.example.kuicly.listners.TemCursoListener;
 import com.example.kuicly.modelo.Curso;
 import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener {
+public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener, TemCursoListener {
 
     public static final String ID_CURSO = "id";
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
@@ -57,10 +58,14 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
 
 
         SingletonGestorCursos.getInstance(getApplicationContext()).setCursoListner(this);
+        SingletonGestorCursos.getInstance(getApplicationContext()).setTemCursoListener(this);
+
+
 
         int id = getIntent().getIntExtra(ID_CURSO,0);
         if (id > 0) {
             curso = SingletonGestorCursos.getInstance(getApplicationContext()).getCurso(id);
+            SingletonGestorCursos.getInstance(getApplicationContext()).temCurso(curso.getId(),getApplicationContext());
             if (curso != null) {
                 SharedPreferences sharedCurso = getSharedPreferences("DADOS_CURSO", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedCurso.edit();
@@ -202,5 +207,14 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         intent.putExtra(MainActivity.OP_CODE,op);
         setResult(RESULT_OK,intent);
         finish();
+    }
+
+    @Override
+    public void onRefreshTemCurso(boolean op) {
+        if(op){
+            btnAddCarrinho.setVisibility(View.GONE);
+        }else{
+            btnAddCarrinho.setVisibility(View.VISIBLE);
+        }
     }
 }

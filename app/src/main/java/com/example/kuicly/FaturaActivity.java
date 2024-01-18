@@ -38,7 +38,7 @@ public class FaturaActivity extends AppCompatActivity implements FaturaListener 
 
         SingletonGestorCursos.getInstance(getApplicationContext()).setFaturaListener(this);
 
-        int id = getIntent().getIntExtra(ID_FATURA,0);
+       /* int id = getIntent().getIntExtra(ID_FATURA,0);
         if (id > 0) {
             fatura = SingletonGestorCursos.getInstance(getApplicationContext()).getFatura(id);//erro getlivrosbd nao faço ideia como é
             if (fatura != null) {
@@ -50,7 +50,7 @@ public class FaturaActivity extends AppCompatActivity implements FaturaListener 
         }else {
             setTitle("Adicionar Livro");
             //fabGuardar.setImageResource(R.drawable.ic_action_adicionar);
-        }
+        }*/
         /*fabGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,20 +81,19 @@ public class FaturaActivity extends AppCompatActivity implements FaturaListener 
         FragmentManager fragmentManager=getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
     }
-    private void carregarInfoFatura() {
+    /*private void carregarInfoFatura() {
 
         tvTotal.setText("Total: "+fatura.getTotal_price()+"€");
        tvIvaTotal.setText("Iva Total: "+fatura.getTotaliva()+"€");
         tvSubTotal.setText("SubTotal: "+fatura.getSubtotal()+"€");
 
 
-    }
+    }*/
 
     @Override
-    public void onRefreshDetalhes(int op) {
-        Intent intent = new Intent();
-        intent.putExtra(MainActivity.OP_CODE,op);
-        setResult(RESULT_OK,intent);
-        finish();
+    public void onRefreshDetalhes(float total,float subtotal,float ivatotal) {
+        tvTotal.setText("Total: "+total+"€");
+        tvIvaTotal.setText("Iva Total: "+ivatotal+"€");
+        tvSubTotal.setText("SubTotal: "+subtotal+"€");
     }
 }
