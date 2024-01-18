@@ -33,10 +33,10 @@ public class LoginActivity extends AppCompatActivity implements LoginListener{
         String user = etUsername.getText().toString();
         String pass = etPassword.getText().toString();
 
-        if(!isUsernameValido(user)) {
+       /* if(!isUsernameValido(user)) {
             etUsername.setError("Username inválido");
             return;
-        }
+        }*/
         if(!isPasswordValida(pass)) {
             etPassword.setError("Password inválida");
             return;

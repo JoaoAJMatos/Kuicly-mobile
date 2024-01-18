@@ -59,14 +59,14 @@ public class SingletonGestorCursos {
     private CursoBDHelper CursoBD= null;
 
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPICursos = "http://10.0.2.2/kuicly/backend/web/api/courses";
-    private static final String mUrlAPILogin = "http://10.0.2.2/kuicly/backend/web/api/logins/login";
+    private static String mUrlAPICursos = "" ;
+    private static String mUrlAPILogin = "";
 
-    private static final String mUrlAPILicoes ="http://10.0.2.2/kuicly/backend/web/api/lessons";
+    private static String mUrlAPILicoes ="";
 
-    private static final String mUrlAPICarrinho ="http://10.0.2.2/kuicly/backend/web/api/carts";
+    private static String mUrlAPICarrinho ="";
 
-    private static final String mUrlAPIFatura ="http://10.0.2.2/kuicly/backend/web/api/orders";
+    private static String mUrlAPIFatura ="";
 
     private String login;
 
@@ -108,6 +108,17 @@ public class SingletonGestorCursos {
 
         cursos = new ArrayList<>();
         CursoBD = new CursoBDHelper(context);
+
+    }
+
+    public void setIpAddress(String ipAddress, Context context) {
+
+        mUrlAPICursos = "http://"+ ipAddress +"/kuicly/backend/web/api/courses";
+        mUrlAPILogin = "http://"+ ipAddress +"/kuicly/backend/web/api/logins/login";
+        mUrlAPILicoes ="http://"+ ipAddress +"/kuicly/backend/web/api/lessons";
+        mUrlAPICarrinho ="http://"+ ipAddress +"/kuicly/backend/web/api/carts";
+        mUrlAPIFatura ="http://"+ ipAddress +"/kuicly/backend/web/api/orders";
+
     }
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
