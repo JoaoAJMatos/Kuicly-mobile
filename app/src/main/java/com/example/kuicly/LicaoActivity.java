@@ -1,11 +1,18 @@
 package com.example.kuicly;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -21,20 +28,30 @@ public class LicaoActivity extends AppCompatActivity implements LicaoListener {
     private TextView etTitulo, etContexto;
     private FloatingActionButton fabGuardar;
     private VideoView videoLicao;
+
+
     public static final String DEFAULT_IMG =
             "http://amsi.dei.estg.ipleiria.pt/img/ipl_semfundo.png";
 
     private Licao licao;
+    private MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_licao);
 
+        mediaController = new MediaController(this);
+
         etTitulo = findViewById(R.id.etTitulo);
         etContexto = findViewById(R.id.etContexto);
-        //videoLicao = findViewById(R.id.videoLicao);
+        videoLicao = findViewById(R.id.videoLicao);
 
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SingletonGestorCursos.getInstance(getApplicationContext()).setLicaoListner(this);
 
@@ -51,6 +68,8 @@ public class LicaoActivity extends AppCompatActivity implements LicaoListener {
             setTitle("Adicionar Livro");
             //fabGuardar.setImageResource(R.drawable.ic_action_adicionar);
         }
+
+
 
         Fragment fragment = new ListaLicoesFragment();
         FragmentManager fragmentManager=getSupportFragmentManager();
@@ -69,8 +88,26 @@ public class LicaoActivity extends AppCompatActivity implements LicaoListener {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(videoLicao);*/
 
-    }
+        String videoUrl = licao.getVideo(); // Substitua isso pela URL do seu vídeo
+        Uri videoUri = Uri.parse(videoUrl);
 
+        videoLicao.setVideoURI(videoUri);
+
+        videoLicao.setMediaController(mediaController);
+        mediaController.setAnchorView(videoLicao);
+
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onRefreshDetalhes(int op) {
         Intent intent = new Intent();

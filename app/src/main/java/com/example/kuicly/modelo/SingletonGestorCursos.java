@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kuicly.CarrinhoActivity;
+import com.example.kuicly.listners.CarrinhoItemApagadoListener;
 import com.example.kuicly.listners.CarrinhoItemListener;
 import com.example.kuicly.listners.CarrinhoItensListener;
 import com.example.kuicly.listners.CarrinhoListener;
@@ -58,6 +59,7 @@ public class SingletonGestorCursos {
 
     private CursoBDHelper CursoBD= null;
 
+
     private static RequestQueue volleyQueue = null;
     private static String mUrlAPICursos = "" ;
     private static String mUrlAPILogin = "";
@@ -71,6 +73,7 @@ public class SingletonGestorCursos {
     private String login;
 
     private boolean temCurso = false;
+    private boolean carrinhoItemApagado = false;
     private Fatura fatura;
     private CursosListener cursosListner;
     private CursoListener cursoListner;
@@ -94,6 +97,8 @@ public class SingletonGestorCursos {
     private MeusCursosListener meusCursosListener;
 
     private TemCursoListener temCursoListener;
+
+    private CarrinhoItemApagadoListener carrinhoItemApagadoListener;
 
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
@@ -172,6 +177,10 @@ public class SingletonGestorCursos {
         this.temCursoListener = temCursoListener;
     }
 
+    public void setCarrinhoItemApagadoListener(CarrinhoItemApagadoListener carrinhoItemApagadoListener) {
+        this.carrinhoItemApagadoListener = carrinhoItemApagadoListener;
+    }
+
 
 
     public void adicionarALLCursosBD(ArrayList<Curso> cursos){
@@ -180,10 +189,20 @@ public class SingletonGestorCursos {
             adicionarCursoBD(curso);
         }
     }
+
+    public void adicionarALLMeusCursosBD(ArrayList<Curso> cursos){
+        CursoBD.removerAllMeusCursosBD();
+        for(Curso curso: cursos){
+            adicionarMeuCursoBD(curso);
+        }
+    }
+
     public void adicionarCursoBD(Curso curso){
         CursoBD.adicionarCursoBD(curso);
     }
-
+    public void adicionarMeuCursoBD(Curso curso){
+        CursoBD.adicionarMeuCursoBD(curso);
+    }
     public ArrayList<Curso> getCursosBD(){
         cursos = CursoBD.getAllCursosBD();
         return new ArrayList<>(cursos);
@@ -242,7 +261,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         if(!CursoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-            cursos= CursoBD.getAllCursosBD();
+            cursos= CursoBD.getAllMeusCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
             }
@@ -252,7 +271,7 @@ public class SingletonGestorCursos {
                 public void onResponse(JSONArray response) {
 
                     cursos= CursoJsonParser.parserJsonCursos(response);
-                    //adicionarALLCursosBD(cursos);
+                    adicionarALLCursosBD(cursos);
 
 
                     if(cursosListner != null){
@@ -455,7 +474,7 @@ public class SingletonGestorCursos {
             volleyQueue.add(req);
         }
     }
-    public void removerCarrinhoItemAPI(final CarrinhoItens carrinhoItem, final Context context)
+    public void removerCarrinhoItemAPI(int course_id, final Context context)
     {
         SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
         int id= preferences.getInt("id",0);
@@ -463,14 +482,18 @@ public class SingletonGestorCursos {
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
         }else{
-            StringRequest req=new StringRequest(Request.Method.DELETE, mUrlAPICarrinho+"/"+id+"/course/"+carrinhoItem.getId()+"?token"+token, new Response.Listener<String>() {
+            StringRequest req=new StringRequest(Request.Method.DELETE, mUrlAPICarrinho+"/"+id+"/course/"+course_id+"?token="+token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 
-                    //removerItemBD(curso.getId());
-                    if(carrinhoItemListener != null){
-                        carrinhoItemListener.onRefreshDetalhes(CarrinhoActivity.DELETE);
+
+                    response = response.trim();
+                    carrinhoItemApagado = Boolean.valueOf(response);
+
+                    if(carrinhoItemApagadoListener != null){
+                        carrinhoItemApagadoListener.onRefreshCarrinhoItemApagado(carrinhoItemApagado);
                     }
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -589,7 +612,7 @@ public class SingletonGestorCursos {
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-            cursos= CursoBD.getAllCursosBD();
+            cursos= CursoBD.getAllMeusCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
             }
@@ -599,7 +622,7 @@ public class SingletonGestorCursos {
                 public void onResponse(JSONArray response) {
 
                     cursos= CursoJsonParser.parserJsonCursos(response);
-                    adicionarALLCursosBD(cursos);
+                    adicionarALLMeusCursosBD(cursos);
 
 
                     if(meusCursosListener != null){

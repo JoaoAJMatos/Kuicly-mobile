@@ -50,6 +50,11 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_curso);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         etTitulo = findViewById(R.id.etTitulo);
         etDescricao = findViewById(R.id.etDescricao);
         imgCapa = findViewById(R.id.imgCapa);
@@ -161,23 +166,17 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if(curso!=null){
-            getMenuInflater().inflate(R.menu.menu_remover,menu);
-            return super.onCreateOptionsMenu(menu);
-        }
-        return false;
-    }
+
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.itemRemover){
-            //dialogRemover();
-            //SingletonGestorLivros.getInstance().removerLivro(livro.getId());
-            return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     /*private void dialogRemover() {

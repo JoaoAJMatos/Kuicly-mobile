@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class ListaCursosFragment extends Fragment implements CursosListener {
 
     private ListView lvCursos; //objeto gráfico
-    private ArrayList<Curso> cursos; //modelo, lista de livros
+    private ArrayList<Curso> cursos;
 
     private FloatingActionButton fabLista;
     private SearchView searchView;
@@ -115,9 +115,9 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
             @Override
             public boolean onQueryTextChange(String newText) {
                 ArrayList<Curso> tempListaCursos = new ArrayList<>();
-                for(Curso l:SingletonGestorCursos.getInstance(getContext()).getCursosBD()){
-                    if(l.getTitle().toLowerCase().contains(newText.toLowerCase()))
-                        tempListaCursos.add(l);
+                for(Curso curso:SingletonGestorCursos.getInstance(getContext()).getCursosBD()){
+                    if(curso.getTitle().toLowerCase().contains(newText.toLowerCase()))
+                        tempListaCursos.add(curso);
                 }
                 lvCursos.setAdapter(new ListaCursosAdaptador(getContext() , tempListaCursos));
                 return true;

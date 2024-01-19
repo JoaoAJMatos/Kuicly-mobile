@@ -41,6 +41,14 @@
             android:textSize="14sp"/>
 
     </LinearLayout>
+    <Button
+        android:id="@+id/btnEliminar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:backgroundTint="@color/red"
+        android:drawableRight="@android:drawable/ic_menu_delete"
+        />
 
 
 </LinearLayout>

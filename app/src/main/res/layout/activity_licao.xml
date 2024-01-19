@@ -14,21 +14,33 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:titleTextColor="?android:textColorPrimary" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
 
             <VideoView
                 android:id="@+id/videoLicao"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
-
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                />
+            </FrameLayout>
             <TextView
                 android:id="@+id/etTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:text="Título da Lesson" />
+                android:text="Título da Lição" />
 
 
             <TextView
@@ -37,6 +49,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:text="Descrição da Lesson" />
+
+
 
             <Space
                 android:layout_width="match_parent"
@@ -48,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:text="Outras Aulas" />
+                android:text="Outras Lições" />
 
             <FrameLayout
                 android:id="@+id/contentFragment"
@@ -58,7 +72,7 @@
             <View
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="200dp"
                 android:layout_weight="0.5" />
         </LinearLayout>
     </ScrollView>

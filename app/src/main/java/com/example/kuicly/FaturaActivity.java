@@ -2,9 +2,11 @@ package com.example.kuicly;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -29,6 +31,12 @@ public class FaturaActivity extends AppCompatActivity implements FaturaListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fatura);
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tvTotal = findViewById(R.id.tvTotal);
         tvIvaTotal = findViewById(R.id.tvIvaTotal);
@@ -89,7 +97,16 @@ public class FaturaActivity extends AppCompatActivity implements FaturaListener 
 
 
     }*/
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onRefreshDetalhes(float total,float subtotal,float ivatotal) {
         tvTotal.setText("Total: "+total+"€");

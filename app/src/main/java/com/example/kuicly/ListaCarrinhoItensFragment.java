@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -30,10 +31,12 @@ public class ListaCarrinhoItensFragment extends Fragment implements CarrinhoIten
 
 
     private ListView lvCarrinhoItens; //objeto gráfico
-    private ArrayList<CarrinhoItens> carrinhoItens; //modelo
+    private CarrinhoItens carrinhoItens; //modelo
 
     private FloatingActionButton fabLista;
     private SearchView searchView;
+
+
 
 
     public ListaCarrinhoItensFragment() {
@@ -54,28 +57,6 @@ public class ListaCarrinhoItensFragment extends Fragment implements CarrinhoIten
         SingletonGestorCursos.getInstance(getContext()).setCarrinhoItensListener(this);
         SingletonGestorCursos.getInstance(getContext()).getAllCarrinhoItensAPI(getContext());
 
-        //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
-        //click num item da lista
-        lvCarrinhoItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
-                intent.putExtra(CarrinhoActivity.ID_CARRINHO_ITENS,(int) id);
-                //startActivity(intent);
-                //startActivityForResult(intent , MainActivity.EDIT);
-
-            }
-        });
-        //click no floating btn
-        /*fabLista = view.findViewById(R.id.fabLista);
-        fabLista.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
-                //startActivity(intent);
-                startActivityForResult(intent , MainActivity.ADD);
-            }
-        });*/
 
         return view;
     }

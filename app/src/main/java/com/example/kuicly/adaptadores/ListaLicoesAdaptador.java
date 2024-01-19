@@ -58,21 +58,19 @@ public class ListaLicoesAdaptador extends BaseAdapter {
     }
 
     private class ViewHolderLista{
-        private TextView tvTile , tvContext;
+        private TextView tvTitle;
 
         private VideoView videoLesson;
 
         public ViewHolderLista(View view){
-            tvTile = view.findViewById(R.id.tvTitle);
-            tvContext = view.findViewById(R.id.tvContexto);
-            //videoLesson = view.findViewById(R.id.videoView);
+            tvTitle = view.findViewById(R.id.tvTitle);
+
 
         }
 
         //invoca 1 vez por cada linha da lista
         public void update(Licao licao){
-            tvTile.setText(licao.getTitle());
-            tvContext.setText(licao.getContext());
+            tvTitle.setText(licao.getTitle());
 
 
         }

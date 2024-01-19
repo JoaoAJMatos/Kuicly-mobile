@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class CursoBDHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "yii2kuicly", TABLE_NAME = "course";
+    private static final String DB_NAME = "yii2kuicly", TABLE_NAME = "course",TABLE_MY_COURSES = "my_courses";
 
     private static final int DB_VERSION = 1;
 
@@ -28,10 +28,27 @@ public class CursoBDHelper extends SQLiteOpenHelper {
     public void removerAllCursosBD(){
         db.delete(TABLE_NAME, null, null);
     }
+    public void removerAllMeusCursosBD(){
+        db.delete(TABLE_MY_COURSES, null, null);
+    }
     public ArrayList<Curso> getAllCursosBD(){
         ArrayList<Curso> cursos = new ArrayList<>();
 
         Cursor cursor = db.query(TABLE_NAME, new String[]{ID, DESCRIPTION, TITLE,PRICE,SKILL_LEVEL,CAPA}, null, null,
+                null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                Curso auxCurso = new Curso(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getFloat(3),cursor.getInt(4),cursor.getString(5));
+                cursos.add(auxCurso);
+            }while(cursor.moveToNext());
+            cursor.close();
+        }
+        return cursos;
+    }
+    public ArrayList<Curso> getAllMeusCursosBD(){
+        ArrayList<Curso> cursos = new ArrayList<>();
+
+        Cursor cursor = db.query(TABLE_MY_COURSES, new String[]{ID, DESCRIPTION, TITLE,PRICE,SKILL_LEVEL,CAPA}, null, null,
                 null, null, null);
         if(cursor.moveToFirst()){
             do{
@@ -54,23 +71,48 @@ public class CursoBDHelper extends SQLiteOpenHelper {
                 CAPA + " TEXT NOT NULL" +
                 ");";
         sqLiteDatabase.execSQL(sqlTableCursos);
+
+        String sqlTableMeusCursos = "CREATE TABLE " + TABLE_MY_COURSES + "(" +
+                ID + " INTEGER PRIMARY KEY, " +
+                DESCRIPTION + " TEXT NOT NULL, " +
+                TITLE + " TEXT NOT NULL, " +
+                PRICE + " FLOAT NOT NULL, " +
+                SKILL_LEVEL + " INTEGER NOT NULL," +
+                CAPA + " TEXT NOT NULL" +
+                ");";
+        sqLiteDatabase.execSQL(sqlTableMeusCursos);
     }
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL( "DROP TABLE IF EXISTS " + TABLE_NAME);
+        sqLiteDatabase.execSQL( "DROP TABLE IF EXISTS " + TABLE_MY_COURSES);
         onCreate(sqLiteDatabase);
     }
 
-    public Curso adicionarCursoBD(Curso livro){
+    public Curso adicionarCursoBD(Curso curso){
         ContentValues values = new ContentValues();
-        values.put(ID, livro.getId());
-        values.put(DESCRIPTION, livro.getDescription());
-        values.put(TITLE, livro.getTitle());
-        values.put(PRICE, livro.getPrice());
-        values.put(SKILL_LEVEL, livro.getSkill_level());
-        values.put(CAPA, livro.getCapa());
+        values.put(ID, curso.getId());
+        values.put(DESCRIPTION, curso.getDescription());
+        values.put(TITLE, curso.getTitle());
+        values.put(PRICE, curso.getPrice());
+        values.put(SKILL_LEVEL, curso.getSkill_level());
+        values.put(CAPA, curso.getCapa());
         db.insert(TABLE_NAME, null, values);
-        return livro;
+        return curso;
+    }
+
+    public Curso adicionarMeuCursoBD(Curso curso){
+        ContentValues values = new ContentValues();
+        values.put(ID, curso.getId());
+        values.put(DESCRIPTION, curso.getDescription());
+        values.put(TITLE, curso.getTitle());
+        values.put(PRICE, curso.getPrice());
+        values.put(SKILL_LEVEL, curso.getSkill_level());
+        values.put(CAPA, curso.getCapa());
+        db.insert(TABLE_MY_COURSES, null, values);
+        return curso;
     }
 }

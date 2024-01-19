@@ -28,7 +28,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Título"
+                android:text="Título: "
                 android:textStyle="bold" />
 
             <TextView
@@ -46,7 +46,7 @@
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Descrição"
+                android:text="Descrição: "
                 android:textStyle="bold" />
 
             <TextView
@@ -64,7 +64,7 @@
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Preço"
+                android:text="Preço: "
                 android:textStyle="bold" />
 
             <TextView
@@ -82,7 +82,7 @@
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nivel de habilidade"
+                android:text="Nivel de habilidade: "
                 android:textStyle="bold" />
 
             <TextView

@@ -2,6 +2,7 @@ package com.example.kuicly;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -49,6 +50,11 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carrinho);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         tvTotal = findViewById(R.id.tvTotal);
         btnPagamento = findViewById(R.id.btnPagamento);
 
@@ -56,43 +62,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoListe
         SingletonGestorCursos.getInstance(getApplicationContext()).setCarrinhoTotalListener(this);
         SingletonGestorCursos.getInstance(getApplicationContext()).setCarrinhoListener(this);
 
-       /* int id = getIntent().getIntExtra(ID_CARRINHO,0);
-        if (id > 0) {
-            carrinho = SingletonGestorCursos.getInstance(getApplicationContext()).getCarrinho(id);//erro getlivrosbd nao faço ideia como é
-            if (carrinho != null) {
 
-                //fabGuardar.setImageResource(R.drawable.ic_action_guardar);
-            }else {
-                finish();
-            }
-        }else {
-            setTitle("Adicionar Livro");
-            //fabGuardar.setImageResource(R.drawable.ic_action_adicionar);
-        }*/
-        /*fabGuardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (livro != null) {
-                    if(isLivroValido()){
-                        livro.setTitulo(etTitulo.getText().toString());
-                        livro.setSerie(etSerie.getText().toString());
-                        livro.setAutor(etAutor.getText().toString());
-                        livro.setAno(Integer.parseInt(etAno.getText().toString()));
-                        //SingletonGestorLivros.getInstance(getApplicationContext()).editarLivroBD(livro);
-                        SingletonGestorCursos.getInstance(getApplicationContext()).editarLivroAPI(livro,getApplicationContext());
-
-                    }
-
-
-                }else if(isLivroValido()) {
-                    livro = new Livro(0,DEFAULT_IMG, Integer.parseInt(etAno.getText().toString()), etTitulo.getText().toString(), etSerie.getText().toString(), etAutor.getText().toString());
-                    SingletonGestorCursos.getInstance(getApplicationContext()).adicionarLivroAPI(livro,getApplicationContext());
-
-                }
-
-            }
-
-        });*/
 
         btnPagamento.setOnClickListener(new View.OnClickListener(){
 
@@ -117,39 +87,18 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoListe
 
 
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if(carrinho!=null){
-            getMenuInflater().inflate(R.menu.menu_remover,menu);
-            return super.onCreateOptionsMenu(menu);
-        }
-        return false;
-    }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.itemRemover){
-            //dialogRemover();
-            //SingletonGestorLivros.getInstance().removerLivro(livro.getId());
-            return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
-    private void dialogRemover() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Remover Item do Carrinho").setMessage("Tem a certeza que pretende remover o item").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    SingletonGestorCursos.getInstance(getApplicationContext()).removerCarrinhoItemAPI(carrinhoItens,getApplicationContext());
 
-                }
-            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                }
-            }).setIcon(android.R.drawable.ic_delete).show();
-        }
     @Override
     public void onRefreshDetalhes(int op) {
         Intent intent = new Intent();

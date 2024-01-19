@@ -98,8 +98,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }else if(item.getItemId()==R.id.navMeusCursos) {
             SingletonGestorCursos.getInstance(getApplicationContext()).getMeusCursosAPI(getApplicationContext());
-            Intent intent = new Intent(this, MeusCursosActivity.class);
-            startActivity(intent);
+            fragment = new ListaMeusCursosFragment();
+            //Intent intent = new Intent(this, MeusCursosActivity.class);
+            //startActivity(intent);
             setTitle(item.getTitle());
         }
         else if(item.getItemId()== R.id.navLogout) {
