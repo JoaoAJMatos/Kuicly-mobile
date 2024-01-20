@@ -60,10 +60,11 @@
                 <!-- Adicione mais linhas conforme necessário para mais itens -->
 
             </TableLayout>
+
             <FrameLayout
                 android:id="@+id/contentFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="136dp" />
 
             <!-- Tabela para os detalhes dos itens da fatura -->
 

@@ -35,7 +35,7 @@
             <FrameLayout
                 android:id="@+id/contentFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="144dp" />
 
             <TextView
                 android:id="@+id/tvTotal"
