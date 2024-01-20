@@ -46,8 +46,7 @@ public class ListaFaturaItensFragment extends Fragment implements FaturaItensLis
         SingletonGestorCursos.getInstance(getContext()).setFaturaItensListener(this);
         SingletonGestorCursos.getInstance(getContext()).getAllFaturasItensAPI(getContext());
 
-        //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
-        //click num item da lista
+
         lvFaturaItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -59,16 +58,6 @@ public class ListaFaturaItensFragment extends Fragment implements FaturaItensLis
 
             }
         });
-        //click no floating btn
-       /* fabLista = view.findViewById(R.id.fabLista);
-        fabLista.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
-                //startActivity(intent);
-                startActivityForResult(intent , MainActivity.ADD);
-            }
-        });*/
 
         return view;
     }

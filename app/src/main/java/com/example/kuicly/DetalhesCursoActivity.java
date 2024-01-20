@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
     private TextView etTitulo, etDescricao, etSerie, etAno;
     private ImageView imgCapa;
+    private FrameLayout contentFragment ;
 
     private Button btnAddCarrinho;
     public static final String DEFAULT_IMG =
@@ -59,6 +61,7 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         etDescricao = findViewById(R.id.etDescricao);
         imgCapa = findViewById(R.id.imgCapa);
         btnAddCarrinho= findViewById(R.id.btnAddCarrinho);
+        contentFragment = findViewById(R.id.contentFragment);
 
 
 
@@ -83,32 +86,9 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             }
         }else {
             setTitle("Adicionar Livro");
-            //fabGuardar.setImageResource(R.drawable.ic_action_adicionar);
+
         }
-        /*fabGuardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (livro != null) {
-                    if(isLivroValido()){
-                        livro.setTitulo(etTitulo.getText().toString());
-                        livro.setSerie(etSerie.getText().toString());
-                        livro.setAutor(etAutor.getText().toString());
-                        livro.setAno(Integer.parseInt(etAno.getText().toString()));
-                        //SingletonGestorLivros.getInstance(getApplicationContext()).editarLivroBD(livro);
-                        SingletonGestorCursos.getInstance(getApplicationContext()).editarLivroAPI(livro,getApplicationContext());
 
-                    }
-
-
-                }else if(isLivroValido()) {
-                    livro = new Livro(0,DEFAULT_IMG, Integer.parseInt(etAno.getText().toString()), etTitulo.getText().toString(), etSerie.getText().toString(), etAutor.getText().toString());
-                    SingletonGestorCursos.getInstance(getApplicationContext()).adicionarLivroAPI(livro,getApplicationContext());
-
-                }
-
-            }
-
-        });*/
 
 
         btnAddCarrinho.setOnClickListener(new View.OnClickListener() {
@@ -129,35 +109,11 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private boolean isLivroValido() {
-        String titulo = etTitulo.getText().toString();
-        String descricao = etDescricao.getText().toString();
-
-        if(titulo.length() < MIN_CHAR){
-            etTitulo.setError("Titulo tem de ter pelo menos "+MIN_CHAR+" caracteres");
-            return false;
-        }
-       /* if(serie.length() < MIN_CHAR){
-            etSerie.setError("Serie tem de ter pelo menos "+MIN_CHAR+" caracteres");
-            return false;
-        }
-        if(autor.length() < MIN_CHAR){
-            etAutor.setError("Autor tem de ter pelo menos "+MIN_CHAR+" caracteres");
-            return false;
-        }
-        if(ano.length() != MIN_NUM){
-            etAno.setError("Ano tem de ter pelo menos "+MIN_NUM+" caracteres");
-            return false;
-        }*/
-        return true;
-    }
 
     private void carregarInfoCurso() {
         setTitle("Detalhes:"+curso.getTitle());
         etTitulo.setText(curso.getTitle());
         etDescricao.setText(curso.getDescription());
-        //etAutor.setText(curso.getPrice() + "");
-        //imgCapa.setImageResource(livro.getCapa());
         Glide.with(getApplicationContext())
                 .load(curso.getCapa())
                 .placeholder(R.drawable.logoipl)
@@ -179,27 +135,6 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         }
     }
 
-    /*private void dialogRemover() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Remover Livro").setMessage("Tem a certeza que pretende remover o livro").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                SingletonGestorCursos.getInstance(getApplicationContext()).removerCursoAPI(curso,getApplicationContext());
-
-            }
-        }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        }).setIcon(android.R.drawable.ic_delete).show();
-    }*/
-
-
-
-
-
-
     @Override
     public void onRefreshDetalhes(int op) {
         Intent intent = new Intent();
@@ -212,8 +147,11 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
     public void onRefreshTemCurso(boolean op) {
         if(op){
             btnAddCarrinho.setVisibility(View.GONE);
+            contentFragment.setVisibility(View.VISIBLE);
+
         }else{
             btnAddCarrinho.setVisibility(View.VISIBLE);
+            contentFragment.setVisibility(View.GONE);
         }
     }
 }

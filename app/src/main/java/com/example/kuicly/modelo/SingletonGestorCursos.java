@@ -270,7 +270,7 @@ public class SingletonGestorCursos {
                 @Override
                 public void onResponse(JSONArray response) {
 
-                    cursos= CursoJsonParser.parserJsonCursos(response);
+                    cursos= CursoJsonParser.parserJsonCursos(response,context);
                     adicionarALLCursosBD(cursos);
 
 
@@ -290,43 +290,8 @@ public class SingletonGestorCursos {
     }
 
 
-    /*public void editarCursoAPI(final Curso curso, final Context context){
-        if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-        }else{
-            StringRequest req=new StringRequest(Request.Method.PUT, mUrlAPICursos+'/'+curso.getId(), new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-
-                    editarCursoBD(curso);
-                    if(cursoListner != null){
-                        cursoListner.onRefreshDetalhes(MainActivity.EDIT);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }){
-
-                @Override
-                protected Map<String, String> getParams(){
-                    Map<String,String> params = new HashMap<>();
-                    //params.put("token",TOKEN);
-                    params.put("titulo", curso.getTitle());
-                    params.put("descricao", curso.getDescription());
-                    params.put("preco", curso.getPrice()+"");
-                    params.put("skill_level", curso.getSkill_level()+"");
 
 
-                    return params;
-                }
-            };
-            volleyQueue.add(req);
-        }
-    }*/
-    //end region
 
     public void loginAPI(final String username, final String password, final Context context) {
         if (!LoginJsonParser.isConnectionInternet(context))
@@ -380,16 +345,13 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         if(!LicaoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-          /*  cursos=getCursosBD();
-            if(cursosListner != null){
-                cursosListner.onRefreshListaCursos(cursos);
-            }*/
+        
         }else{
             JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPILicoes+"/lessonsbycourse/"+cursoId+"?token="+token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
-                    licoes= LicaoJsonParser.parserJsonLicoes(response);
+                    licoes= LicaoJsonParser.parserJsonLicoes(response,context);
                     //adicionarALLCursosBD(cursos);
 
                     if(licoesListner != null){
@@ -414,10 +376,7 @@ public class SingletonGestorCursos {
 
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-          /*  cursos=getCursosBD();
-            if(cursosListner != null){
-                cursosListner.onRefreshListaCursos(cursos);
-            }*/
+
         }else{
             JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/items?token="+ token,null, new Response.Listener<JSONArray>() {
                 @Override
@@ -448,10 +407,7 @@ public class SingletonGestorCursos {
 
         if(!CarrinhoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
-          /*  cursos=getCursosBD();
-            if(cursosListner != null){
-                cursosListner.onRefreshListaCursos(cursos);
-            }*/
+
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"?token="+token, new Response.Listener<String>() {
                 @Override
@@ -621,7 +577,7 @@ public class SingletonGestorCursos {
                 @Override
                 public void onResponse(JSONArray response) {
 
-                    cursos= CursoJsonParser.parserJsonCursos(response);
+                    cursos= CursoJsonParser.parserJsonCursos(response,context);
                     adicionarALLMeusCursosBD(cursos);
 
 
@@ -659,9 +615,7 @@ public class SingletonGestorCursos {
                     if(temCursoListener != null){
                         temCursoListener.onRefreshTemCurso(temCurso);
                     }
-                    /*if(cursoListner != null){
-                        cursoListner.onRefreshDetalhes(MainActivity.EDIT);
-                    }*/
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -673,4 +627,6 @@ public class SingletonGestorCursos {
         }
 
     }
+
+    //end region
 }

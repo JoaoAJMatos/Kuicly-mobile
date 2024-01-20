@@ -30,9 +30,9 @@ public class ListaLicoesFragment extends Fragment implements LicoesListener {
     private ArrayList<Licao> licoes; //modelo, lista de livros
 
     private FloatingActionButton fabLista;
-    //private SearchView searchView;
+
     public ListaLicoesFragment() {
-        // Required empty public constructor
+
     }
 
 
@@ -48,10 +48,7 @@ public class ListaLicoesFragment extends Fragment implements LicoesListener {
         lvLicoes = view.findViewById(R.id.lvLicoes);
         SingletonGestorCursos.getInstance(getContext()).setLicoesListner(this);
         SingletonGestorCursos.getInstance(getContext()).getAllLicoesAPI(cursoid,getContext());
-        //SingletonGestorCursos.getInstance(getContext()).temCurso(cursoid,getContext());
 
-        //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
-        //click num item da lista
         lvLicoes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -62,60 +59,13 @@ public class ListaLicoesFragment extends Fragment implements LicoesListener {
 
             }
         });
-        //click no floating btn
+
 
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(resultCode== Activity.RESULT_OK){
-            if(requestCode==MainActivity.ADD || requestCode==MainActivity.EDIT){
-                SingletonGestorCursos.getInstance(getContext()).getAllCursosAPI(getContext());
-               /* livros=SingletonGestorLivros.getInstance(getContext()).getLivrosBD();
-                lvLivros.setAdapter(new ListaLivrosAdaptador(getContext(),livros));*/
-                switch (requestCode){
-                    case MainActivity.ADD: Toast.makeText(getContext(),"Livro adicionado com sucesso",Toast.LENGTH_LONG).show();
-                        break;
-                    case MainActivity.EDIT:
-                        if(data.getIntExtra(MainActivity.OP_CODE,0)==MainActivity.DELETE){
-                            Toast.makeText(getContext(),"Livro eliminado com sucesso",Toast.LENGTH_LONG).show();
-                        }else {
-                            Toast.makeText(getContext(),"Livro modificado com sucesso",Toast.LENGTH_LONG).show();
-                        }
 
-                        break;
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
-    /*@Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_pesquisa , menu);
-        MenuItem itemPesquisa = menu.findItem(R.id.itemPesquisa);
-        searchView = (SearchView) itemPesquisa.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            //quando o utilizador submete a pesquisa
-            @Override
-            public boolean onQueryTextSubmit(String newText) {
-                return false;
-            }
-            //quando o utilizador escreve
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                ArrayList<Curso> tempListaLicoes = new ArrayList<>();
-                for(Curso l:SingletonGestorCursos.getInstance(getContext()).getCursosBD()){
-                    if(l.getTitle().toLowerCase().contains(newText.toLowerCase()))
-                        tempListaLicoes.add(l);
-                }
-                lvLicoes.setAdapter(new ListaCursosAdaptador(getContext() , tempListaLicoes));
-                return true;
-            }
-        });
-        super.onCreateOptionsMenu(menu , inflater);
-    }*/
 
     @Override
     public void onRefreshListaLicoes(ArrayList<Licao> listaLicoes) {

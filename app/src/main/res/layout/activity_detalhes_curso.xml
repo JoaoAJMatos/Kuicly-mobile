@@ -41,13 +41,6 @@
                 android:text="Título do Curso" />
 
             <TextView
-                android:id="@+id/tvInstrutor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Instrutor do Curso" />
-
-            <TextView
                 android:id="@+id/etDescricao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

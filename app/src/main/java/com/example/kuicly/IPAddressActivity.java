@@ -1,6 +1,7 @@
 package com.example.kuicly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -24,11 +25,11 @@ public class IPAddressActivity extends AppCompatActivity {
         String ipAddress = etIpAddress.getText().toString();
         Intent intent = new Intent(this, LoginActivity.class);
 
-        /*SharedPreferences sharedPreferences = getSharedPreferences("IP",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("IP",ipAddress);
-        editor.commit();
-        finish();*/
+        SharedPreferences sharedIP  = getSharedPreferences("IP", MODE_PRIVATE);
+        SharedPreferences.Editor editor  = sharedIP.edit();
+        editor.putString("ip", ipAddress);
+        editor.apply();
+
         SingletonGestorCursos.getInstance(getApplicationContext()).setIpAddress(ipAddress, getApplicationContext());
 
         startActivity(intent);

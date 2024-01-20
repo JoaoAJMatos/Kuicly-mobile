@@ -41,14 +41,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener{
             etPassword.setError("Password inválida");
             return;
         }
-        //Toast.makeText(this,"Auth bem sucedida", Toast.LENGTH_LONG).show();
-
-        //Ex 3.2
-        /*Intent intent = new Intent(this,MainActivity.class);
-        intent.putExtra(EMAIL,email);
-        intent.putExtra("NOME","diana");
-        startActivity(intent);
-        finish();*/
 
         SingletonGestorCursos singletonGestorCursos = SingletonGestorCursos.getInstance(this);
         singletonGestorCursos.setLoginListener(this);
@@ -59,9 +51,8 @@ public class LoginActivity extends AppCompatActivity implements LoginListener{
     private boolean isUsernameValido(String username) {
         if(username == null)
             return false;
-        // Adapte a validação de acordo com os requisitos do seu sistema
-        // Por exemplo, verificando o tamanho mínimo ou a presença de caracteres especiais
-        return username.length() >= MIN_CHAR; // Defina MIN_CHAR conforme necessário
+
+        return username.length() >= MIN_CHAR;
     }
 
     private boolean isPasswordValida(String pass) {

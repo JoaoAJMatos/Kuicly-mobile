@@ -26,10 +26,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
-    private String email;
+    private String user;
     private FragmentManager fragmentManager;
 
-    public static final String EMAIL="EMAIL";
+    public static final String USER="USER";
     public static final int ADD=100, EDIT=200, DELETE=300;
     public static final String OP_CODE="op_detalhes";
 
@@ -65,20 +65,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void carregarCabecalho() {
         Intent intent = getIntent();
-        email=intent.getStringExtra(LoginActivity.USER);
-        SharedPreferences sharedPreferencesEmailUser = getSharedPreferences("DADOS", Context.MODE_PRIVATE);
+        user=intent.getStringExtra(LoginActivity.USER);
+        SharedPreferences sharedPreferencesUser = getSharedPreferences("DADOS", Context.MODE_PRIVATE);
 
-        if(email!=null) {
-            SharedPreferences.Editor editorUser = sharedPreferencesEmailUser.edit();
-            editorUser.putString(EMAIL, email);
+        if(user!=null) {
+            SharedPreferences.Editor editorUser = sharedPreferencesUser.edit();
+            editorUser.putString(USER, user);
             editorUser.apply();
         } else {
-            email = sharedPreferencesEmailUser.getString(EMAIL,"Email não encontrado");
+            user = sharedPreferencesUser.getString(USER,"Email não encontrado");
 
         }
         View hView = navigationView.getHeaderView(0);
-        TextView tvEmail = hView.findViewById(R.id.tvEmail);
-        tvEmail.setText(email);
+        TextView tvEmail = hView.findViewById(R.id.tvUser);
+        tvEmail.setText(user);
     }
 
     @Override
@@ -86,21 +86,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
 
         if(item.getItemId()==R.id.navCurso) {
-            //System.out.println("-->Nav Estatico"); Não funciona pois estava a enviar uma mensagem para a consola
-            //fragment = new EstaticoFragment();
+
             fragment = new ListaCursosFragment();
             setTitle(item.getTitle());
         }else if(item.getItemId()==R.id.navCarrinho) {
             SingletonGestorCursos.getInstance(getApplicationContext()).getCarrinhoAPI(getApplicationContext());
             Intent intent = new Intent(this, CarrinhoActivity.class);
             startActivity(intent);
-            setTitle(item.getTitle());
+
 
         }else if(item.getItemId()==R.id.navMeusCursos) {
             SingletonGestorCursos.getInstance(getApplicationContext()).getMeusCursosAPI(getApplicationContext());
             fragment = new ListaMeusCursosFragment();
-            //Intent intent = new Intent(this, MeusCursosActivity.class);
-            //startActivity(intent);
             setTitle(item.getTitle());
         }
         else if(item.getItemId()== R.id.navLogout) {

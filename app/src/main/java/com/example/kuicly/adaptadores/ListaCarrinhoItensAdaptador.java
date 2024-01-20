@@ -110,6 +110,8 @@ public class ListaCarrinhoItensAdaptador extends BaseAdapter implements Carrinho
         }
     }
 
+
+
     @Override
     public void onRefreshCarrinhoItemApagado(boolean apagado) {
         if(apagado){

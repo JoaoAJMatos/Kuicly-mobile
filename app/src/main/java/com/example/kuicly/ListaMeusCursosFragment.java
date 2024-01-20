@@ -38,7 +38,7 @@ public class ListaMeusCursosFragment extends Fragment implements MeusCursosListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_lista_meus_cursos , container , false);
         setHasOptionsMenu(true);
 
@@ -46,8 +46,7 @@ public class ListaMeusCursosFragment extends Fragment implements MeusCursosListe
         SingletonGestorCursos.getInstance(getContext()).setMeusCursosListener(this);
         SingletonGestorCursos.getInstance(getContext()).getMeusCursosAPI(getContext());
 
-        //  lvLivros.setAdapter(new ListaLivrosAdaptador(getContext() , livros));
-        //click num item da lista
+
         lvMeusCursos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {

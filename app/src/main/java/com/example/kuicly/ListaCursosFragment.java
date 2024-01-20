@@ -62,16 +62,6 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
 
             }
         });
-        //click no floating btn
-       /* fabLista = view.findViewById(R.id.fabLista);
-        fabLista.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext() , DetalhesCursoActivity.class);
-                //startActivity(intent);
-                startActivityForResult(intent , MainActivity.ADD);
-            }
-        });*/
 
         return view;
     }
@@ -81,8 +71,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
         if(resultCode== Activity.RESULT_OK){
             if(requestCode==MainActivity.ADD || requestCode==MainActivity.EDIT){
                 SingletonGestorCursos.getInstance(getContext()).getAllCursosAPI(getContext());
-               /* livros=SingletonGestorLivros.getInstance(getContext()).getLivrosBD();
-                lvLivros.setAdapter(new ListaLivrosAdaptador(getContext(),livros));*/
+
                 switch (requestCode){
                     case MainActivity.ADD: Toast.makeText(getContext(),"Livro adicionado com sucesso",Toast.LENGTH_LONG).show();
                         break;

@@ -1,6 +1,9 @@
 package com.example.kuicly.utils;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -14,8 +17,10 @@ import java.util.ArrayList;
 
 public class CursoJsonParser {
 
-    public static ArrayList<Curso> parserJsonCursos(JSONArray response){
+    public static ArrayList<Curso> parserJsonCursos(JSONArray response, Context context){
         ArrayList<Curso> cursos = new ArrayList<>();
+        SharedPreferences sharedIP  = context.getSharedPreferences("IP", MODE_PRIVATE);
+        String ip = sharedIP.getString("ip", "");
         try {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject cursoJSON = (JSONObject) response.get(i);
@@ -24,7 +29,7 @@ public class CursoJsonParser {
                 String title = cursoJSON.getString("title");
                 float price = cursoJSON.getInt("price");
                 int skill_level = cursoJSON.getInt("skill_level");
-                String capa = "http://10.0.2.2/kuicly/frontend/web/uploads/" + cursoJSON.getString("file_id");
+                String capa = "http://"+ip+"/kuicly/frontend/web/uploads/" + cursoJSON.getString("file_id");
 
                 Curso curso = new Curso(id, description, title, price, skill_level,capa);
                 cursos.add(curso);

@@ -81,12 +81,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoListe
         fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
     }
 
-    private void carregarInfoCarrinho() {
-        tvTotal.setText("Total: "+carrinho.getTotal()+"€");
 
-
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
