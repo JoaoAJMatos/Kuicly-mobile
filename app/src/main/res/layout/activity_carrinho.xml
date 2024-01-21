@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="5dp"
-    tools:context=".DetalhesCursoActivity">
-
+    tools:context=".CarrinhoActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,57 +24,42 @@
                 android:background="@color/white"
                 app:titleTextColor="?android:textColorPrimary" />
 
-            <ImageView
-                android:id="@+id/imgCapa"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:src="@drawable/logoipl" />
-
             <TextView
-                android:id="@+id/etTitulo"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Carrinho"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:text="Título do Curso" />
-
-            <TextView
-                android:id="@+id/etDescricao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Descrição do Curso" />
-
-            <TextView
-                android:id="@+id/etLicao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:text="Lições" />
+                android:layout_marginBottom="16dp"/>
 
             <FrameLayout
                 android:id="@+id/contentFragment"
                 android:layout_width="match_parent"
-                android:layout_height="116dp" />
+                android:layout_height="144dp" />
 
-
-
-            <Button
-                android:id="@+id/btnAddCarrinho"
+            <TextView
+                android:id="@+id/tvTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimary"
-                android:text="Adicionar ao Carrinho" />
+                android:text=""
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
 
+            <Button
+                android:id="@+id/btnPagamento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finalizar Compra" />
 
             <View
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="0dp"
                 android:layout_weight="0.5" />
         </LinearLayout>
     </ScrollView>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp">
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <!-- Linha de cabeçalho da tabela -->
+
+
+            <!-- Linha de dados do produto -->
+            <TableRow>
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nome do Produto "
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp"/>
+                <TextView
+                    android:id="@+id/tvIvaPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Iva Preço Dinâmico"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp"/>
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Preço Dinâmico"
+                    android:textSize="20sp"/>
+            </TableRow>
+
+            <!-- Adicione mais linhas conforme necessário -->
+
+        </TableLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="5dp"
+    tools:context=".FaturaActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:titleTextColor="?android:textColorPrimary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalhes da Fatura"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*">
+
+                <!-- Cabeçalho da tabela -->
+                <TableRow>
+                    <TextView
+                        android:text="Produto"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:padding="4dp"/>
+                    <TextView
+                        android:text="Preço Iva"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:padding="4dp"/>
+                    <TextView
+                        android:text="Preço Total"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:padding="4dp"/>
+                </TableRow>
+
+                <!-- Exemplo de um item na tabela -->
+
+
+                <!-- Adicione mais linhas conforme necessário para mais itens -->
+
+            </TableLayout>
+
+            <FrameLayout
+                android:id="@+id/contentFragment"
+                android:layout_width="match_parent"
+                android:layout_height="136dp" />
+
+            <!-- Tabela para os detalhes dos itens da fatura -->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                />
+            <!-- Detalhes da fatura -->
+            <TextView
+                android:id="@+id/tvIvaTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text=""
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/tvSubTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text=""
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/tvTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text=""
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
