@@ -26,7 +26,7 @@ public class LicaoJsonParser {
                 int id = licaoJSON.getInt("id");
                 String title = licaoJSON.getString("title");
                 String contexto = licaoJSON.getString("context");
-                String video = "http://10.0.2.2/kuicly/frontend/web/uploads/" + licaoJSON.getString("file_id");
+                String video = "http://"+ip+"/kuicly/frontend/web/uploads/" + licaoJSON.getString("file_id");
                 Licao licao = new Licao(id,title,contexto,video);
                 licoes.add(licao);
             }
