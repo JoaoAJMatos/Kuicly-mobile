@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kuicly.CarrinhoActivity;
+import com.example.kuicly.DetalhesCursoActivity;
 import com.example.kuicly.listners.CarrinhoItemApagadoListener;
 import com.example.kuicly.listners.CarrinhoItemListener;
 import com.example.kuicly.listners.CarrinhoItensListener;
@@ -22,6 +23,7 @@ import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.listners.CursosListener;
 import com.example.kuicly.listners.FaturaItensListener;
 import com.example.kuicly.listners.FaturaListener;
+import com.example.kuicly.listners.FavoritoListner;
 import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
@@ -70,9 +72,12 @@ public class SingletonGestorCursos {
 
     private static String mUrlAPIFatura ="";
 
+    private static String mUrlAPIFavorito="";
+
     private String login;
 
     private boolean temCurso = false;
+    private boolean temFavorito = false;
     private boolean carrinhoItemApagado = false;
     private Fatura fatura;
     private CursosListener cursosListner;
@@ -100,6 +105,8 @@ public class SingletonGestorCursos {
 
     private CarrinhoItemApagadoListener carrinhoItemApagadoListener;
 
+    private FavoritoListner favoritoListner;
+
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
         if(instance == null) {
@@ -123,6 +130,7 @@ public class SingletonGestorCursos {
         mUrlAPILicoes ="http://"+ ipAddress +"/kuicly/backend/web/api/lessons";
         mUrlAPICarrinho ="http://"+ ipAddress +"/kuicly/backend/web/api/carts";
         mUrlAPIFatura ="http://"+ ipAddress +"/kuicly/backend/web/api/orders";
+        mUrlAPIFavorito ="http://"+ ipAddress +"/kuicly/backend/web/api/favorites";
 
     }
     public void setLoginListener(LoginListener loginListener) {
@@ -179,6 +187,10 @@ public class SingletonGestorCursos {
 
     public void setCarrinhoItemApagadoListener(CarrinhoItemApagadoListener carrinhoItemApagadoListener) {
         this.carrinhoItemApagadoListener = carrinhoItemApagadoListener;
+    }
+
+    public void setFavoritoListner(FavoritoListner favoritoListner) {
+        this.favoritoListner = favoritoListner;
     }
 
 
@@ -627,6 +639,72 @@ public class SingletonGestorCursos {
         }
 
     }
+
+    public void adicionarFavoritoAPI(final Curso curso, final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        int id= preferences.getInt("id",0);
+        String token= preferences.getString("token","");
+        if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPIFavorito+"/"+id+"/add/"+curso.getId()+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+
+                    response = response.trim();
+                    temFavorito = Boolean.valueOf(response);
+
+
+                    if(favoritoListner != null){
+                        favoritoListner.onRefreshFavorito(temFavorito);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+
+    }
+
+    public void temFavorito(int cursoId,final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
+        int id= preferences.getInt("id",0);
+        if(!CursoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPIFavorito+"/"+id+"/course/"+cursoId+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    //adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
+                    response = response.trim();
+                    temFavorito = Boolean.valueOf(response);
+
+
+                    if(favoritoListner != null){
+                        favoritoListner.onRefreshFavorito(temFavorito);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "tem Curso erro response", Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+
+    }
+
+
+
 
     //end region
 }

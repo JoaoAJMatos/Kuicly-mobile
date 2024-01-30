@@ -25,13 +25,14 @@ import androidx.fragment.app.FragmentManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.kuicly.listners.CursoListener;
+import com.example.kuicly.listners.FavoritoListner;
 import com.example.kuicly.listners.TemCursoListener;
 import com.example.kuicly.modelo.Curso;
 import com.example.kuicly.modelo.SingletonGestorCursos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener, TemCursoListener {
+public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener, TemCursoListener, FavoritoListner {
 
     public static final String ID_CURSO = "id";
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
@@ -39,9 +40,11 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
     private ImageView imgCapa;
     private FrameLayout contentFragment ;
 
-    private Button btnAddCarrinho;
+    private Button btnAddCarrinho,btnAddFavorito;
     public static final String DEFAULT_IMG =
             "http://amsi.dei.estg.ipleiria.pt/img/ipl_semfundo.png";
+
+    public static final int ADD=100,DELETE=300;
 
     private Curso curso;
     private NavigationView navigationView;
@@ -61,12 +64,15 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         etDescricao = findViewById(R.id.etDescricao);
         imgCapa = findViewById(R.id.imgCapa);
         btnAddCarrinho= findViewById(R.id.btnAddCarrinho);
+        btnAddFavorito = findViewById(R.id.btnAddFavorito);
         contentFragment = findViewById(R.id.contentFragment);
 
 
 
         SingletonGestorCursos.getInstance(getApplicationContext()).setCursoListner(this);
         SingletonGestorCursos.getInstance(getApplicationContext()).setTemCursoListener(this);
+        SingletonGestorCursos.getInstance(getApplicationContext()).setFavoritoListner(this);
+
 
 
 
@@ -74,6 +80,7 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         if (id > 0) {
             curso = SingletonGestorCursos.getInstance(getApplicationContext()).getCurso(id);
             SingletonGestorCursos.getInstance(getApplicationContext()).temCurso(curso.getId(),getApplicationContext());
+            SingletonGestorCursos.getInstance(getApplicationContext()).temFavorito(curso.getId(),getApplicationContext());
             if (curso != null) {
                 SharedPreferences sharedCurso = getSharedPreferences("DADOS_CURSO", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedCurso.edit();
@@ -98,6 +105,15 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
                 showToast("Produto adicionado ao carrinho!");
             }
         });
+
+        btnAddFavorito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SingletonGestorCursos.getInstance(getApplicationContext()).adicionarFavoritoAPI(curso,getApplicationContext());
+                showToast("Produto adicionado aos favoritos!");
+            }
+        });
+
 
 
         Fragment fragment = new ListaLicoesFragment();
@@ -153,5 +169,15 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             btnAddCarrinho.setVisibility(View.VISIBLE);
             contentFragment.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onRefreshFavorito(boolean op) {
+        if(op){
+            btnAddFavorito.setText("Remover dos favoritos");
+        }else{
+            btnAddFavorito.setText("Adicionar aos favoritos");
+        }
+
     }
 }
