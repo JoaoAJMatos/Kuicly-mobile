@@ -13,7 +13,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kuicly.CarrinhoActivity;
-import com.example.kuicly.DetalhesCursoActivity;
 import com.example.kuicly.listners.CarrinhoItemApagadoListener;
 import com.example.kuicly.listners.CarrinhoItemListener;
 import com.example.kuicly.listners.CarrinhoItensListener;
@@ -28,6 +27,7 @@ import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
 import com.example.kuicly.listners.MeusCursosListener;
+import com.example.kuicly.listners.TemCursoCarrinhoListener;
 import com.example.kuicly.listners.TemCursoListener;
 import com.example.kuicly.utils.CarrinhoItensJsonParser;
 import com.example.kuicly.utils.CarrinhoJsonParser;
@@ -78,6 +78,7 @@ public class SingletonGestorCursos {
 
     private boolean temCurso = false;
     private boolean temFavorito = false;
+    private boolean temCursoCarrinho = false;
     private boolean carrinhoItemApagado = false;
     private Fatura fatura;
     private CursosListener cursosListner;
@@ -106,6 +107,8 @@ public class SingletonGestorCursos {
     private CarrinhoItemApagadoListener carrinhoItemApagadoListener;
 
     private FavoritoListner favoritoListner;
+
+    private TemCursoCarrinhoListener temCursoCarrinhoListener;
 
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
@@ -191,6 +194,10 @@ public class SingletonGestorCursos {
 
     public void setFavoritoListner(FavoritoListner favoritoListner) {
         this.favoritoListner = favoritoListner;
+    }
+
+    public void setTemCursoCarrinhoListener(TemCursoCarrinhoListener temCursoCarrinhoListener) {
+        this.temCursoCarrinhoListener = temCursoCarrinhoListener;
     }
 
 
@@ -485,9 +492,15 @@ public class SingletonGestorCursos {
                 public void onResponse(String response) {
 
                     //adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
+                    response = response.trim();
+                    temCursoCarrinho = Boolean.valueOf(response);
 
                     if(carrinhoItemListener != null){
                         carrinhoItemListener.onRefreshDetalhes(CarrinhoActivity.ADD);
+                    }
+
+                    if (temCursoCarrinhoListener != null){
+                        temCursoCarrinhoListener.onRefreshAddCarrinho(temCursoCarrinho);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -703,6 +716,37 @@ public class SingletonGestorCursos {
 
     }
 
+    public void temCursoCarrinho(int cursoId,final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
+        int id= preferences.getInt("id",0);
+        if(!CursoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/hasitem/"+cursoId+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    //adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
+                    response = response.trim();
+                    temCursoCarrinho = Boolean.valueOf(response);
+
+
+                    if(temCursoCarrinhoListener != null){
+                        temCursoCarrinhoListener.onRefreshAddCarrinho(temCursoCarrinho);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "tem Curso erro response", Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+
+    }
 
 
 

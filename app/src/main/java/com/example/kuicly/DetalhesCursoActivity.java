@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,11 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -26,13 +22,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.listners.FavoritoListner;
+import com.example.kuicly.listners.TemCursoCarrinhoListener;
 import com.example.kuicly.listners.TemCursoListener;
 import com.example.kuicly.modelo.Curso;
 import com.example.kuicly.modelo.SingletonGestorCursos;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener, TemCursoListener, FavoritoListner {
+public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener, TemCursoListener, FavoritoListner, TemCursoCarrinhoListener {
 
     public static final String ID_CURSO = "id";
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
@@ -72,6 +68,7 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         SingletonGestorCursos.getInstance(getApplicationContext()).setCursoListner(this);
         SingletonGestorCursos.getInstance(getApplicationContext()).setTemCursoListener(this);
         SingletonGestorCursos.getInstance(getApplicationContext()).setFavoritoListner(this);
+        SingletonGestorCursos.getInstance(getApplicationContext()).setTemCursoCarrinhoListener(this);
 
 
 
@@ -81,6 +78,7 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             curso = SingletonGestorCursos.getInstance(getApplicationContext()).getCurso(id);
             SingletonGestorCursos.getInstance(getApplicationContext()).temCurso(curso.getId(),getApplicationContext());
             SingletonGestorCursos.getInstance(getApplicationContext()).temFavorito(curso.getId(),getApplicationContext());
+            SingletonGestorCursos.getInstance(getApplicationContext()).temCursoCarrinho(curso.getId(),getApplicationContext());
             if (curso != null) {
                 SharedPreferences sharedCurso = getSharedPreferences("DADOS_CURSO", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedCurso.edit();
@@ -102,7 +100,8 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             @Override
             public void onClick(View view) {
                 SingletonGestorCursos.getInstance(getApplicationContext()).adicionarCarrinhoItemAPI(curso,getApplicationContext());
-                showToast("Produto adicionado ao carrinho!");
+
+
             }
         });
 
@@ -110,7 +109,8 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             @Override
             public void onClick(View view) {
                 SingletonGestorCursos.getInstance(getApplicationContext()).adicionarFavoritoAPI(curso,getApplicationContext());
-                showToast("Produto adicionado aos favoritos!");
+
+
             }
         });
 
@@ -179,5 +179,15 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             btnAddFavorito.setText("Adicionar aos favoritos");
         }
 
+    }
+
+    @Override
+    public void onRefreshAddCarrinho(boolean op) {
+        if(op){
+            btnAddCarrinho.setText("Curso adicionado");
+        }else{
+            btnAddCarrinho.setText("Adicionar ao carrinho");
+
+        }
     }
 }
