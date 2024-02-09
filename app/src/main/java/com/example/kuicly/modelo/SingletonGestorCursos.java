@@ -278,6 +278,7 @@ public class SingletonGestorCursos {
     public void getAllCursosAPI(final Context context){
         SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
         String token= preferences.getString("token","");
+        int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
             cursos= CursoBD.getAllMeusCursosBD();
@@ -285,7 +286,7 @@ public class SingletonGestorCursos {
                 cursosListner.onRefreshListaCursos(cursos);
             }
         }else{
-            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"/courses?token="+token,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"/courses/"+id+"?token="+token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
@@ -401,7 +402,7 @@ public class SingletonGestorCursos {
                 @Override
                 public void onResponse(JSONArray response) {
 
-                    carrinhoItens= CarrinhoItensJsonParser.parserJsonCarrinhoItens(response);
+                    carrinhoItens= CarrinhoItensJsonParser.parserJsonCarrinhoItens(response,context);
                     //adicionarALLCursosBD(cursos);
 
                     if(carrinhoItensListener != null){

@@ -109,6 +109,7 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
             @Override
             public void onClick(View view) {
                 SingletonGestorCursos.getInstance(getApplicationContext()).adicionarFavoritoAPI(curso,getApplicationContext());
+                SingletonGestorCursos.getInstance(getApplicationContext()).getAllCursosAPI(getApplicationContext());
 
 
             }

@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setTitle(item.getTitle());
         }else if(item.getItemId()==R.id.navCarrinho) {
             SingletonGestorCursos.getInstance(getApplicationContext()).getCarrinhoAPI(getApplicationContext());
-            Intent intent = new Intent(this, CarrinhoActivity.class);
-            startActivity(intent);
+            fragment = new ListaCarrinhoItensFragment();
+            setTitle(item.getTitle());
 
 
         }else if(item.getItemId()==R.id.navMeusCursos) {

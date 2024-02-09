@@ -58,9 +58,8 @@ public class FaturaActivity extends AppCompatActivity implements FaturaListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                SingletonGestorCursos.getInstance(getApplicationContext()).getCarrinhoAPI(getApplicationContext());
-                Intent intent = new Intent(this, CarrinhoActivity.class);
-                startActivity(intent);
+                SingletonGestorCursos.getInstance(getApplicationContext()).getAllCarrinhoItensAPI(getApplicationContext());
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
