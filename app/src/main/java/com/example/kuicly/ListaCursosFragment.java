@@ -63,7 +63,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
 
             }
         });
-        
+
         return view;
     }
 
