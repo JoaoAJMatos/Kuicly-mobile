@@ -26,13 +26,15 @@ import com.example.kuicly.listners.TemCursoCarrinhoListener;
 import com.example.kuicly.listners.TemCursoListener;
 import com.example.kuicly.modelo.Curso;
 import com.example.kuicly.modelo.SingletonGestorCursos;
+import com.example.kuicly.utils.CarrinhoItensJsonParser;
+import com.example.kuicly.utils.CursoJsonParser;
 import com.google.android.material.navigation.NavigationView;
 
 public class DetalhesCursoActivity extends AppCompatActivity implements CursoListener, TemCursoListener, FavoritoListner, TemCursoCarrinhoListener {
 
     public static final String ID_CURSO = "id";
     private static final int MIN_CHAR = 3,MIN_NUM = 4;
-    private TextView etTitulo, etDescricao, etSerie, etAno;
+    private TextView etTitulo, etDescricao, etLicao;
     private ImageView imgCapa;
     private FrameLayout contentFragment ;
 
@@ -62,6 +64,7 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         btnAddCarrinho= findViewById(R.id.btnAddCarrinho);
         btnAddFavorito = findViewById(R.id.btnAddFavorito);
         contentFragment = findViewById(R.id.contentFragment);
+        etLicao = findViewById(R.id.etLicao);
 
 
 
@@ -94,6 +97,13 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
 
         }
 
+
+        if(!CursoJsonParser.isConnectionInternet(getApplicationContext())){
+            btnAddCarrinho.setVisibility(View.GONE);
+            btnAddFavorito.setVisibility(View.GONE);
+            etLicao.setVisibility(View.GONE);
+
+        }
 
 
         btnAddCarrinho.setOnClickListener(new View.OnClickListener() {
@@ -165,10 +175,12 @@ public class DetalhesCursoActivity extends AppCompatActivity implements CursoLis
         if(op){
             btnAddCarrinho.setVisibility(View.GONE);
             contentFragment.setVisibility(View.VISIBLE);
+            etLicao.setVisibility(View.VISIBLE);
 
         }else{
             btnAddCarrinho.setVisibility(View.VISIBLE);
             contentFragment.setVisibility(View.GONE);
+            etLicao.setVisibility(View.GONE);
         }
     }
 

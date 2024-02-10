@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +26,7 @@ import com.example.kuicly.listners.CarrinhoTotalListener;
 import com.example.kuicly.modelo.Carrinho;
 import com.example.kuicly.modelo.CarrinhoItens;
 import com.example.kuicly.modelo.SingletonGestorCursos;
+import com.example.kuicly.utils.CursoJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class CarrinhoActivity extends AppCompatActivity implements CarrinhoListener, CarrinhoTotalListener {

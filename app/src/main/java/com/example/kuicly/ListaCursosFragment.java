@@ -22,6 +22,7 @@ import com.example.kuicly.adaptadores.ListaCursosAdaptador;
 import com.example.kuicly.listners.CursosListener;
 import com.example.kuicly.modelo.Curso;
 import com.example.kuicly.modelo.SingletonGestorCursos;
+import com.example.kuicly.utils.CursoJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
 
             }
         });
-
+        
         return view;
     }
 
@@ -94,6 +95,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
         inflater.inflate(R.menu.menu_pesquisa , menu);
         MenuItem itemPesquisa = menu.findItem(R.id.itemPesquisa);
         searchView = (SearchView) itemPesquisa.getActionView();
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             //quando o utilizador submete a pesquisa
             @Override
@@ -112,6 +114,7 @@ public class ListaCursosFragment extends Fragment implements CursosListener {
                 return true;
             }
         });
+
         super.onCreateOptionsMenu(menu , inflater);
     }
 

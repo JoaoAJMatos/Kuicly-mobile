@@ -24,6 +24,7 @@ import com.example.kuicly.modelo.Carrinho;
 import com.example.kuicly.modelo.CarrinhoItens;
 import com.example.kuicly.modelo.Curso;
 import com.example.kuicly.modelo.SingletonGestorCursos;
+import com.example.kuicly.utils.CursoJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -63,7 +64,10 @@ public class ListaCarrinhoItensFragment extends Fragment implements CarrinhoIten
         SingletonGestorCursos.getInstance(getContext()).getAllCarrinhoItensAPI(getContext());
         SingletonGestorCursos.getInstance(getContext()).setCarrinhoTotalListener(this);
 
+        if(!CursoJsonParser.isConnectionInternet(getContext())){
+            btnPagamento.setVisibility(View.GONE);
 
+        }
         btnPagamento.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {

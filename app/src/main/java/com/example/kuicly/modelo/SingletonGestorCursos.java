@@ -280,7 +280,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             cursos= CursoBD.getAllMeusCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
@@ -315,7 +315,7 @@ public class SingletonGestorCursos {
 
     public void loginAPI(final String username, final String password, final Context context) {
         if (!LoginJsonParser.isConnectionInternet(context))
-            Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         else {
             StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
                         @Override
@@ -364,7 +364,7 @@ public class SingletonGestorCursos {
         SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
         String token= preferences.getString("token","");
         if(!LicaoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         
         }else{
             JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPILicoes+"/lessonsbycourse/"+cursoId+"?token="+token,null, new Response.Listener<JSONArray>() {
@@ -395,7 +395,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
 
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
 
         }else{
             JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/items?token="+ token,null, new Response.Listener<JSONArray>() {
@@ -426,7 +426,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
 
         if(!CarrinhoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
 
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"?token="+token, new Response.Listener<String>() {
@@ -456,7 +456,7 @@ public class SingletonGestorCursos {
         int id= preferences.getInt("id",0);
         String token= preferences.getString("token","");
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.DELETE, mUrlAPICarrinho+"/"+id+"/course/"+course_id+"?token="+token, new Response.Listener<String>() {
                 @Override
@@ -486,7 +486,7 @@ public class SingletonGestorCursos {
         int id= preferences.getInt("id",0);
         String token= preferences.getString("token","");
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/course/"+curso.getId()+"?token="+token, new Response.Listener<String>() {
                 @Override
@@ -521,7 +521,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
 
         if(!FaturaJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
           /*  cursos=getCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
@@ -560,7 +560,7 @@ public class SingletonGestorCursos {
         SharedPreferences SharedFatura = context.getSharedPreferences("DADOS_FATURA", Context.MODE_PRIVATE);
         int id= SharedFatura.getInt("order_id",0);
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
           /*  cursos=getCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
@@ -593,7 +593,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             cursos= CursoBD.getAllMeusCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
@@ -627,7 +627,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICursos+"/"+id+"/hascourse/"+cursoId+"?token="+token, new Response.Listener<String>() {
                 @Override
@@ -659,7 +659,7 @@ public class SingletonGestorCursos {
         int id= preferences.getInt("id",0);
         String token= preferences.getString("token","");
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPIFavorito+"/"+id+"/add/"+curso.getId()+"?token="+token, new Response.Listener<String>() {
                 @Override
@@ -690,7 +690,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPIFavorito+"/"+id+"/course/"+cursoId+"?token="+token, new Response.Listener<String>() {
                 @Override
@@ -722,7 +722,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/hasitem/"+cursoId+"?token="+token, new Response.Listener<String>() {
                 @Override
