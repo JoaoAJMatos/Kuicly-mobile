@@ -22,10 +22,12 @@ import com.example.kuicly.listners.CursoListener;
 import com.example.kuicly.listners.CursosListener;
 import com.example.kuicly.listners.FaturaItensListener;
 import com.example.kuicly.listners.FaturaListener;
+import com.example.kuicly.listners.FavoritoListner;
 import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
 import com.example.kuicly.listners.MeusCursosListener;
+import com.example.kuicly.listners.TemCursoCarrinhoListener;
 import com.example.kuicly.listners.TemCursoListener;
 import com.example.kuicly.utils.CarrinhoItensJsonParser;
 import com.example.kuicly.utils.CarrinhoJsonParser;
@@ -70,9 +72,13 @@ public class SingletonGestorCursos {
 
     private static String mUrlAPIFatura ="";
 
+    private static String mUrlAPIFavorito="";
+
     private String login;
 
     private boolean temCurso = false;
+    private boolean temFavorito = false;
+    private boolean temCursoCarrinho = false;
     private boolean carrinhoItemApagado = false;
     private Fatura fatura;
     private CursosListener cursosListner;
@@ -100,6 +106,10 @@ public class SingletonGestorCursos {
 
     private CarrinhoItemApagadoListener carrinhoItemApagadoListener;
 
+    private FavoritoListner favoritoListner;
+
+    private TemCursoCarrinhoListener temCursoCarrinhoListener;
+
 
     public static synchronized SingletonGestorCursos getInstance(Context context){
         if(instance == null) {
@@ -123,6 +133,7 @@ public class SingletonGestorCursos {
         mUrlAPILicoes ="http://"+ ipAddress +"/kuicly/backend/web/api/lessons";
         mUrlAPICarrinho ="http://"+ ipAddress +"/kuicly/backend/web/api/carts";
         mUrlAPIFatura ="http://"+ ipAddress +"/kuicly/backend/web/api/orders";
+        mUrlAPIFavorito ="http://"+ ipAddress +"/kuicly/backend/web/api/favorites";
 
     }
     public void setLoginListener(LoginListener loginListener) {
@@ -179,6 +190,14 @@ public class SingletonGestorCursos {
 
     public void setCarrinhoItemApagadoListener(CarrinhoItemApagadoListener carrinhoItemApagadoListener) {
         this.carrinhoItemApagadoListener = carrinhoItemApagadoListener;
+    }
+
+    public void setFavoritoListner(FavoritoListner favoritoListner) {
+        this.favoritoListner = favoritoListner;
+    }
+
+    public void setTemCursoCarrinhoListener(TemCursoCarrinhoListener temCursoCarrinhoListener) {
+        this.temCursoCarrinhoListener = temCursoCarrinhoListener;
     }
 
 
@@ -259,14 +278,15 @@ public class SingletonGestorCursos {
     public void getAllCursosAPI(final Context context){
         SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
         String token= preferences.getString("token","");
+        int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             cursos= CursoBD.getAllMeusCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
             }
         }else{
-            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"/courses?token="+token,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICursos+"/courses/"+id+"?token="+token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
@@ -295,7 +315,7 @@ public class SingletonGestorCursos {
 
     public void loginAPI(final String username, final String password, final Context context) {
         if (!LoginJsonParser.isConnectionInternet(context))
-            Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         else {
             StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
                         @Override
@@ -344,7 +364,7 @@ public class SingletonGestorCursos {
         SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
         String token= preferences.getString("token","");
         if(!LicaoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         
         }else{
             JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPILicoes+"/lessonsbycourse/"+cursoId+"?token="+token,null, new Response.Listener<JSONArray>() {
@@ -375,14 +395,14 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
 
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
 
         }else{
             JsonArrayRequest req=new JsonArrayRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/items?token="+ token,null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
-                    carrinhoItens= CarrinhoItensJsonParser.parserJsonCarrinhoItens(response);
+                    carrinhoItens= CarrinhoItensJsonParser.parserJsonCarrinhoItens(response,context);
                     //adicionarALLCursosBD(cursos);
 
                     if(carrinhoItensListener != null){
@@ -406,7 +426,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
 
         if(!CarrinhoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
 
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"?token="+token, new Response.Listener<String>() {
@@ -436,7 +456,7 @@ public class SingletonGestorCursos {
         int id= preferences.getInt("id",0);
         String token= preferences.getString("token","");
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.DELETE, mUrlAPICarrinho+"/"+id+"/course/"+course_id+"?token="+token, new Response.Listener<String>() {
                 @Override
@@ -466,16 +486,22 @@ public class SingletonGestorCursos {
         int id= preferences.getInt("id",0);
         String token= preferences.getString("token","");
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/course/"+curso.getId()+"?token="+token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 
                     //adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
+                    response = response.trim();
+                    temCursoCarrinho = Boolean.valueOf(response);
 
                     if(carrinhoItemListener != null){
                         carrinhoItemListener.onRefreshDetalhes(CarrinhoActivity.ADD);
+                    }
+
+                    if (temCursoCarrinhoListener != null){
+                        temCursoCarrinhoListener.onRefreshAddCarrinho(temCursoCarrinho);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -495,7 +521,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
 
         if(!FaturaJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
           /*  cursos=getCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
@@ -534,7 +560,7 @@ public class SingletonGestorCursos {
         SharedPreferences SharedFatura = context.getSharedPreferences("DADOS_FATURA", Context.MODE_PRIVATE);
         int id= SharedFatura.getInt("order_id",0);
         if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
           /*  cursos=getCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
@@ -567,7 +593,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             cursos= CursoBD.getAllMeusCursosBD();
             if(cursosListner != null){
                 cursosListner.onRefreshListaCursos(cursos);
@@ -601,7 +627,7 @@ public class SingletonGestorCursos {
         String token= preferences.getString("token","");
         int id= preferences.getInt("id",0);
         if(!CursoJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context, "Não neeo ligação á internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
             StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICursos+"/"+id+"/hascourse/"+cursoId+"?token="+token, new Response.Listener<String>() {
                 @Override
@@ -627,6 +653,103 @@ public class SingletonGestorCursos {
         }
 
     }
+
+    public void adicionarFavoritoAPI(final Curso curso, final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        int id= preferences.getInt("id",0);
+        String token= preferences.getString("token","");
+        if(!CarrinhoItensJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPIFavorito+"/"+id+"/add/"+curso.getId()+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+
+                    response = response.trim();
+                    temFavorito = Boolean.valueOf(response);
+
+
+                    if(favoritoListner != null){
+                        favoritoListner.onRefreshFavorito(temFavorito);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+
+    }
+
+    public void temFavorito(int cursoId,final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
+        int id= preferences.getInt("id",0);
+        if(!CursoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPIFavorito+"/"+id+"/course/"+cursoId+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    //adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
+                    response = response.trim();
+                    temFavorito = Boolean.valueOf(response);
+
+
+                    if(favoritoListner != null){
+                        favoritoListner.onRefreshFavorito(temFavorito);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "tem Curso erro response", Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+
+    }
+
+    public void temCursoCarrinho(int cursoId,final Context context){
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String token= preferences.getString("token","");
+        int id= preferences.getInt("id",0);
+        if(!CursoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest req=new StringRequest(Request.Method.GET, mUrlAPICarrinho+"/"+id+"/hasitem/"+cursoId+"?token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    //adicionarCursoBD(CursoJsonParser.parserJsonCurso(response));
+                    response = response.trim();
+                    temCursoCarrinho = Boolean.valueOf(response);
+
+
+                    if(temCursoCarrinhoListener != null){
+                        temCursoCarrinhoListener.onRefreshAddCarrinho(temCursoCarrinho);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "tem Curso erro response", Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+
+    }
+
+
 
     //end region
 }

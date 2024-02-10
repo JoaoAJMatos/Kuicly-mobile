@@ -62,12 +62,27 @@
 
 
 
-            <Button
-                android:id="@+id/btnAddCarrinho"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimary"
-                android:text="Adicionar ao Carrinho" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnAddCarrinho"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Adicionar ao Carrinho" />
+
+                <Button
+                    android:id="@+id/btnAddFavorito"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Adicionar aos Favoritos" />
+            </LinearLayout>
+
 
 
             <View
