@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.kuicly.listners.FaturaListener;
+import com.example.kuicly.listners.PagamentoListener;
 import com.example.kuicly.modelo.Carrinho;
 import com.example.kuicly.modelo.CarrinhoItens;
 import com.example.kuicly.modelo.Fatura;
@@ -45,13 +47,26 @@ public class FaturaActivity extends AppCompatActivity implements FaturaListener 
 
 
         SingletonGestorCursos.getInstance(getApplicationContext()).setFaturaListener(this);
+        SingletonGestorCursos.getInstance(getApplicationContext()).getPagamentoAPI(getApplicationContext(), new PagamentoListener() {
+            @Override
+            public void onPagamentoSuccess() {
+                // Este código será executado após o pagamento ser bem-sucedido
+                // Aqui você pode realizar a próxima operação, como carregar o fragmento
 
+                Fragment fragment = new ListaFaturaItensFragment();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
+            }
 
+            @Override
+            public void onPagamentoFailure(String errorMessage) {
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-
-        Fragment fragment = new ListaFaturaItensFragment();
-        FragmentManager fragmentManager=getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -59,6 +74,7 @@ public class FaturaActivity extends AppCompatActivity implements FaturaListener 
         switch (item.getItemId()) {
             case android.R.id.home:
                 SingletonGestorCursos.getInstance(getApplicationContext()).getAllCarrinhoItensAPI(getApplicationContext());
+                SingletonGestorCursos.getInstance(getApplicationContext()).getCarrinhoAPI(getApplicationContext());
                 onBackPressed();
                 return true;
             default:

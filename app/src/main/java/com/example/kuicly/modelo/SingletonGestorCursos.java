@@ -27,6 +27,7 @@ import com.example.kuicly.listners.LicaoListener;
 import com.example.kuicly.listners.LicoesListener;
 import com.example.kuicly.listners.LoginListener;
 import com.example.kuicly.listners.MeusCursosListener;
+import com.example.kuicly.listners.PagamentoListener;
 import com.example.kuicly.listners.TemCursoCarrinhoListener;
 import com.example.kuicly.listners.TemCursoListener;
 import com.example.kuicly.utils.CarrinhoItensJsonParser;
@@ -515,7 +516,8 @@ public class SingletonGestorCursos {
 
     }
 
-    public void getPagamentoAPI(final Context context){
+    public void getPagamentoAPI(final Context context, final PagamentoListener callback){
+
         SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
         int id= preferences.getInt("id",0);
         String token= preferences.getString("token","");
@@ -538,9 +540,14 @@ public class SingletonGestorCursos {
                     SharedPreferences.Editor editor = SharedFatura.edit();
                     editor.putInt("order_id", fatura.getId());
                     editor.apply();
+
                     Log.e("Erro de Solicitação", "Falha na solicitação: " + fatura.getId());
                     if(faturaListener != null){
                         faturaListener.onRefreshDetalhes(fatura.getTotal_price(),fatura.getSubtotal(),fatura.getTotaliva());
+                    }
+
+                    if (callback != null) {
+                        callback.onPagamentoSuccess();
                     }
 
                 }

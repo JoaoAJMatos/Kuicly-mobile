@@ -10,7 +10,7 @@
             android:id="@+id/navCurso" />
         <item
             android:title="@string/txt_menu_carrinho"
-            android:icon="@drawable/ic_menu_estatico"
+            android:icon="@drawable/baseline_shopping_cart_checkout_24"
             android:id="@+id/navCarrinho" />
 
         <item
@@ -20,13 +20,9 @@
 
     </group>
 
-    <item android:title="@string/txt_comunicar">
-        <menu>
             <item android:id="@+id/navLogout"
-                android:icon="@drawable/ic_menu_email"
+                android:icon="@drawable/baseline_logout_24"
                 android:title="@string/txt_menu_logout">
             </item>
 
-        </menu>
-    </item>
 </menu>

@@ -66,16 +66,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoListe
 
 
 
-        btnPagamento.setOnClickListener(new View.OnClickListener(){
 
-            public void onClick(View view) {
-                SingletonGestorCursos.getInstance(getApplicationContext()).getPagamentoAPI(getApplicationContext());
-                Intent intent = new Intent(getApplicationContext(),FaturaActivity.class);
-                startActivity(intent);
-            }
-
-
-        });
 
 
         Fragment fragment = new ListaCarrinhoItensFragment();

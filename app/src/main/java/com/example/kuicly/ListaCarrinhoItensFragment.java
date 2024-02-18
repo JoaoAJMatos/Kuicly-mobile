@@ -71,7 +71,7 @@ public class ListaCarrinhoItensFragment extends Fragment implements CarrinhoIten
         btnPagamento.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {
-                SingletonGestorCursos.getInstance(getContext()).getPagamentoAPI(getContext());
+
                 Intent intent = new Intent(getContext(),FaturaActivity.class);
                 startActivity(intent);
             }
